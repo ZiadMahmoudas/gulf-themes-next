@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
+import { Alexandria, Inter } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { site } from "@/lib/site";
 
-const arabic = IBM_Plex_Sans_Arabic({ subsets: ["arabic"], weight: ["400", "500", "600", "700"], variable: "--font-arabic", display: "swap" });
+const arabic = Alexandria({ subsets: ["arabic"], weight: ["400", "500", "600", "700", "800"], variable: "--font-arabic", display: "swap" });
 const latin = Inter({ subsets: ["latin"], variable: "--font-latin", display: "swap" });
+
+const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "HlAVGimmDYEmGUnPz0d_qfSFLSy-FnMN8aMnmYmSs1Q";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -19,7 +21,8 @@ export const metadata: Metadata = {
   keywords: ["قوالب ووردبريس", "قالب ووردبريس عربي", "Elementor عربي", "قالب متجر سعودي", "WooCommerce عربي", "إضافات ووردبريس عربية", "WordPress الخليج"],
   alternates: { types: { "application/rss+xml": `${site.url}/rss.xml` } },
   icons: {
-    icon: [{ url: "/icon.png", sizes: "512x512", type: "image/png" }],
+    icon: [{ url: "/icon.png", sizes: "32x32", type: "image/png" }],
+    shortcut: ["/icon.png"],
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
@@ -33,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: site.name, description: site.description, images: ["/brand/arabdev-og.png"] },
   robots: { index: true, follow: true },
-  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } : undefined,
+  verification: { google: googleVerification },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -51,6 +54,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   };
   return (
     <html lang="ar" dir="rtl">
+      <head>
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+      </head>
       <body className={`${arabic.variable} ${latin.variable}`}>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }} />
         {children}

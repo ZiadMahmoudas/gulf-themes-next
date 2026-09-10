@@ -22,10 +22,11 @@ export function SiteEffects() {
     if (reduceMotion) return;
 
     const lenis = new Lenis({
-      lerp: 0.085,
+      duration: 1.05,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       syncTouch: false,
-      wheelMultiplier: 0.9,
+      wheelMultiplier: 0.86,
       touchMultiplier: 1,
       autoResize: true,
       anchors: { offset: -76 },

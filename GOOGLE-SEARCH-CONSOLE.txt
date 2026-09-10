@@ -1,0 +1,27 @@
+ArabDEV — Google Search Console
+===============================
+
+1) HTML meta verification is already wired into app/layout.tsx.
+Current token:
+HlAVGimmDYEmGUnPz0d_qfSFLSy-FnMN8aMnmYmSs1Q
+
+It renders as:
+<meta name="google-site-verification" content="HlAVGimmDYEmGUnPz0d_qfSFLSy-FnMN8aMnmYmSs1Q" />
+
+You can also keep this in .env.local:
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=HlAVGimmDYEmGUnPz0d_qfSFLSy-FnMN8aMnmYmSs1Q
+
+2) Domain-property DNS verification CANNOT be done from Next.js code.
+Add this TXT record at the DNS provider for the real domain:
+google-site-verification=yynhsHv5bAcForWNxdYxZL6jT7r_XI4NUWSOf4owrD8
+
+3) Set the production URL before deploying:
+NEXT_PUBLIC_SITE_URL=https://YOUR-REAL-DOMAIN.com
+
+4) After verification submit:
+https://YOUR-REAL-DOMAIN.com/sitemap.xml
+
+Existing SEO endpoints:
+/sitemap.xml
+/robots.txt
+/rss.xml

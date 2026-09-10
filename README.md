@@ -67,3 +67,9 @@ Development mode compiles routes on first navigation and can feel slower than pr
 ## Important
 
 Themes and plugins keep external product/demo URLs. Articles stay internal under `/blog/[slug]` so ArabDEV builds its own search authority.
+
+## V10 notes
+- Main public UI uses Alexandria Arabic typography and editorial Unsplash photography.
+- Article pages use the new dark Journal design.
+- Google Search Console HTML verification is already wired. See `GOOGLE-SEARCH-CONSOLE.txt` for the DNS TXT record and sitemap steps.
+- Replace Unsplash fallback images naturally by uploading real cover images from the Admin dashboard.

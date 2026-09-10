@@ -56,9 +56,10 @@ export function Header() {
   }, [pathname]);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const isJournal = pathname.startsWith("/blog/");
 
   return (
-    <header className={`site-header${scrolled ? " is-scrolled" : ""}${hidden ? " is-hidden" : ""}`}>
+    <header className={`site-header${scrolled ? " is-scrolled" : ""}${hidden ? " is-hidden" : ""}${isJournal ? " is-journal" : ""}`}>
       <div className="announcement">
         <div className="shell">
           <span>Arab-first WordPress products</span>

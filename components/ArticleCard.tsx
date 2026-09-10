@@ -1,20 +1,17 @@
 import Link from "next/link";
 import type { Post } from "@/lib/content";
+import { articleImage } from "@/lib/editorial-images";
 
 type CardPost = Post & { featuredImage?: string | null };
 
 export function ArticleCard({ post, index }: { post: CardPost; index: number }) {
+  const image = articleImage(post.slug, post.featuredImage);
+
   return (
-    <article className="article-card" data-reveal>
+    <article className="article-card article-card-v10" data-reveal>
       <Link href={`/blog/${post.slug}`} className="article-thumb" aria-label={post.title} prefetch>
-        {post.featuredImage ? (
-          <img src={post.featuredImage} alt={post.title} loading="lazy" decoding="async" />
-        ) : (
-          <div className="article-thumb-placeholder" aria-hidden="true">
-            <span>{String(index + 1).padStart(2, "0")}</span>
-            <b>ArabDEV</b>
-          </div>
-        )}
+        <img src={image} alt={post.title} loading={index < 3 ? "eager" : "lazy"} decoding="async" />
+        <span className="article-thumb-badge">{String(index + 1).padStart(2, "0")} / ARABDEV</span>
       </Link>
 
       <div className="article-card-copy">
