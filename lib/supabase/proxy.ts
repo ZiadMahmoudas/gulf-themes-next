@@ -1,12 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getSupabaseConfig } from "@/lib/supabase/config";
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
-
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return response;
+  const { url, key } = getSupabaseConfig();
 
   const supabase = createServerClient(url, key, {
     cookies: {
@@ -24,8 +22,8 @@ export async function updateSession(request: NextRequest) {
   try {
     await supabase.auth.getClaims();
   } catch {
-    // Never make a public/admin-login request crash because Supabase is temporarily unavailable.
-    return response;
+    // Never crash public pages if auth refresh is temporarily unavailable.
   }
+
   return response;
 }

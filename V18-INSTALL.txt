@@ -1,0 +1,12 @@
+ArabDEV V18
+
+1) Deploy this folder/zip to Vercel.
+2) Redeploy Production.
+3) Open: https://arabdev.vercel.app/api/supabase-health
+   - ok:true means the Vercel server can reach Supabase Auth.
+4) Open: https://arabdev.vercel.app/admin/login
+5) Login with the Supabase Auth user: ziadbobo78@gmail.com
+
+Important:
+- The public Supabase project URL + publishable key now have a code fallback, so login no longer depends on Vercel env scoping.
+- If /api/supabase-health says ok:true but login says credentials, create/reset the user password in Supabase > Authentication > Users.

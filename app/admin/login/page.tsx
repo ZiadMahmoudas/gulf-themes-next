@@ -6,7 +6,9 @@ export const metadata = { title: "دخول الإدارة", robots: { index: fal
 const errorText: Record<string, string> = {
   denied: "هذا الحساب غير مسموح له بالدخول إلى لوحة ArabDEV.",
   credentials: "البريد أو كلمة المرور غير صحيحة.",
-  supabase: "اتصال Supabase غير مضبوط على السيرفر. في Vercel أضف متغيرات Supabase من Settings → Environment Variables ثم اعمل Redeploy.",
+  supabase: "تعذر تحميل إعدادات Supabase.",
+  network: "إعدادات Supabase موجودة، لكن السيرفر لم يستطع الوصول إلى خدمة المصادقة. راجع حالة مشروع Supabase أو سجلات Vercel.",
+  session: "تم فقد جلسة الإدارة أو لم يتم حفظها. سجّل الدخول مرة أخرى.",
 };
 
 export default async function AdminLogin({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
