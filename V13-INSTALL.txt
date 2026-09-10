@@ -1,0 +1,23 @@
+ARABDEV V13
+============
+
+1) Replace your current project with this folder (keep your real .env.local values).
+2) Run:
+   npm install
+   npm run build
+   npm start
+
+Main public homepage:
+  app/(site)/page.tsx
+
+Unified public shell:
+  app/(site)/layout.tsx
+  components/Header.tsx
+  components/Footer.tsx
+
+V13 CSS is appended at the end of:
+  app/globals.css
+
+IMPORTANT:
+- app/page.tsx was intentionally removed because it created a second homepage outside the public `(site)` layout.
+- Do not recreate app/page.tsx unless you also restructure the route groups.

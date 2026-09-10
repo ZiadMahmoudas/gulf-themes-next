@@ -5,48 +5,51 @@ import { site, whatsappUrl } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="footer">
-      <div className="shell footer-hero">
+    <footer className="v13-footer">
+      <div className="shell v13-footer-cta">
         <div>
-          <span className="footer-eyebrow">ARABDEV / ARABIC-FIRST DIGITAL PRODUCTS</span>
-          <h2>منتجات رقمية عربية<br />تبدأ صح من أول Pixel.</h2>
-          <p>ثيمات WordPress، إضافات عملية، ومحتوى يساعد أصحاب المشاريع العربية والخليجية يطلقوا مواقع أوضح وأسرع وأسهل في البيع.</p>
+          <span>ARABDEV / WORDPRESS FOR ARABIC BUSINESSES</span>
+          <h2>عندك مشروع WordPress؟<br />خلّيه يبدأ صح.</h2>
+          <p>اختار قالب أو إضافة جاهزة، أو ابعت لنا احتياجك ونرشح لك أنسب حل بدون تعقيد.</p>
         </div>
-        <a className="footer-talk" href={whatsappUrl("مرحباً، أريد أن نبدأ مشروعاً مع ArabDEV")} target="_blank" rel="noreferrer"><span>ابدأ مشروعك</span><b>↗</b></a>
+        <a href={whatsappUrl("مرحباً، أريد ترشيح أنسب حل لمشروعي")} target="_blank" rel="noreferrer">ابدأ المحادثة <b>↗</b></a>
       </div>
 
-      <div className="shell footer-grid">
-        <div className="footer-brand-block">
+      <div className="shell v13-footer-grid">
+        <div className="v13-footer-brand">
           <Brand />
           <p>{site.arabicTagline}</p>
-          <div className="footer-social-wrap"><span>تابع ArabDEV</span><SocialLinks dark /></div>
+          <div className="v13-footer-social"><SocialLinks dark /></div>
         </div>
 
-        <div className="footer-links-col">
-          <h4>المنتجات</h4>
-          <Link href="/themes" prefetch>قوالب WordPress</Link>
-          <Link href="/plugins" prefetch>إضافات WordPress</Link>
-          <Link href="/contact" prefetch>طلب موقع مخصص</Link>
+        <div className="v13-footer-col">
+          <h3>المتجر</h3>
+          <Link href="/themes">قوالب WordPress</Link>
+          <Link href="/plugins">إضافات WordPress</Link>
+          <Link href="/contact">طلب تنفيذ مخصص</Link>
         </div>
 
-        <div className="footer-links-col">
-          <h4>المعرفة</h4>
-          <Link href="/blog" prefetch>المقالات والدلائل</Link>
+        <div className="v13-footer-col">
+          <h3>روابط مهمة</h3>
+          <Link href="/blog">المقالات والدلائل</Link>
+          <Link href="/about">عن ArabDEV</Link>
           <Link href="/#faq">الأسئلة الشائعة</Link>
-          <Link href="/about" prefetch>عن ArabDEV</Link>
-          <Link href="/contact" prefetch>الدعم والتواصل</Link>
+          <Link href="/contact">الدعم والتواصل</Link>
         </div>
 
-        <div className="footer-contact">
-          <h4>تواصل مباشرة</h4>
+        <div className="v13-footer-col v13-footer-contact">
+          <h3>تواصل معنا</h3>
           <a href={`tel:${site.phone}`}>{site.phone}</a>
           <a href={`mailto:${site.email}`}>{site.email}</a>
           <span>{site.location}</span>
-          <a className="footer-whatsapp" href={whatsappUrl("مرحباً، أتواصل من موقع ArabDEV")} target="_blank" rel="noreferrer">WhatsApp ↗</a>
+          <a className="v13-footer-wa" href={whatsappUrl("مرحباً، أتواصل من موقع ArabDEV")} target="_blank" rel="noreferrer">WhatsApp ↗</a>
         </div>
       </div>
 
-      <div className="shell footer-bottom"><span>© 2026 ArabDEV. All rights reserved.</span><span>Arabic-first · WordPress · GCC</span></div>
+      <div className="shell v13-footer-bottom">
+        <span>© 2026 ArabDEV. All rights reserved.</span>
+        <span>Arabic-first · WordPress · GCC</span>
+      </div>
     </footer>
   );
 }
