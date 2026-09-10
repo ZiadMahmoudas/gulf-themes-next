@@ -21,8 +21,11 @@ export const metadata: Metadata = {
   keywords: ["قوالب ووردبريس", "قالب ووردبريس عربي", "Elementor عربي", "قالب متجر سعودي", "WooCommerce عربي", "إضافات ووردبريس عربية", "WordPress الخليج"],
   alternates: { types: { "application/rss+xml": `${site.url}/rss.xml` } },
   icons: {
-    icon: [{ url: "/icon.png", sizes: "32x32", type: "image/png" }],
-    shortcut: ["/icon.png"],
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", sizes: "64x64", type: "image/png" },
+    ],
+    shortcut: ["/favicon.ico"],
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {

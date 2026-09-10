@@ -1,0 +1,16 @@
+ArabDEV V12 install
+
+1) Keep your existing .env.local. Do not overwrite it.
+2) Replace the project files with V12.
+3) Delete the Next cache:
+   PowerShell: Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+4) npm install
+5) npm run dev
+
+For real performance testing:
+   npm run build
+   npm start
+
+Favicon caching:
+- Hard refresh (Ctrl+Shift+R) or test in Incognito.
+- V12 includes /favicon.ico, /icon.png, /apple-icon.png based on the exact uploaded AD mark.

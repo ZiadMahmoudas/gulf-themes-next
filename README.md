@@ -1,4 +1,4 @@
-# ArabDEV V11
+# ArabDEV V12
 
 Premium Arabic-first WordPress Themes / Plugins / Content platform built with Next.js + Supabase.
 

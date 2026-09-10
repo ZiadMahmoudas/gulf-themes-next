@@ -1,0 +1,30 @@
+ArabDEV V8 install
+==================
+
+1) Backup your current project.
+2) Keep your current .env.local (do not overwrite it).
+3) Replace the project files with V8.
+4) Run:
+
+   npm install
+
+   or, if your existing node_modules are already installed:
+
+   npm install lenis@1.3.26
+
+5) Delete .next and restart:
+
+   PowerShell:
+   Remove-Item -Recurse -Force .next
+   npm run dev
+
+6) For production-speed testing:
+
+   npm run build
+   npm start
+
+Google Search Console (optional now):
+Add to .env.local:
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=YOUR_TOKEN
+
+Keep NEXT_PUBLIC_SITE_URL set to the real final domain before Search Console verification.

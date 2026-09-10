@@ -1,0 +1,22 @@
+ArabDEV V9
+===========
+
+1) Keep your existing .env.local. Do NOT replace it.
+2) Replace the project files with V9.
+3) Delete the old Next cache:
+
+PowerShell:
+Remove-Item -Recurse -Force .next
+
+CMD:
+rmdir /s /q .next
+
+4) Start again:
+npm run dev
+
+5) Open /blog, then navigate Home -> Themes -> Plugins -> Blog.
+The console should no longer show the `article-card is-visible` hydration mismatch.
+
+Production speed test:
+npm run build
+npm start

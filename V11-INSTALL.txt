@@ -1,0 +1,35 @@
+ArabDEV V11 — INSTALL / UPDATE
+
+1) Keep your current .env.local. Do NOT replace it.
+
+2) If updating the existing Supabase project, open:
+   Supabase > SQL Editor
+   and run ONLY:
+   supabase/v11-update.sql
+
+3) On local Windows PowerShell:
+   Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+   npm install
+   npm run dev
+
+4) For real production-speed testing:
+   npm run build
+   npm start
+
+5) Vercel:
+   Project > Settings > Environment Variables
+   Make sure all current Supabase / ADMIN_EMAIL / EmailJS variables exist for Production.
+   NEXT_PUBLIC_SITE_URL should be a complete public URL, e.g. https://arabdev.vercel.app
+   Redeploy after changes.
+
+6) FAQ management:
+   /admin/faqs
+
+7) Images:
+   Theme/Plugin covers uploaded from Dashboard are used first.
+   Article Featured Images uploaded from Dashboard are used first.
+   Unsplash is only a visual fallback when no image has been uploaded.
+
+8) Google Search Console:
+   HTML meta verification is already supported in app/layout.tsx.
+   DNS verification must be added at your domain/DNS provider, not in Next.js.

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ThemeCard } from "@/components/ThemeCard";
-import { PluginCard } from "@/components/PluginCard";
 import { ArticleCard } from "@/components/ArticleCard";
-import { themeImage } from "@/lib/editorial-images";
+import { themeImage, pluginImage } from "@/lib/editorial-images";
 import { whatsappUrl } from "@/lib/site";
 import {
   getPublishedArticles,
@@ -19,12 +17,28 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const categories = [
-  { index: "01", title: "قوالب WordPress", note: "متاجر · شركات · خدمات", href: "/themes" },
-  { index: "02", title: "إضافات WordPress", note: "WooCommerce · UX · محتوى", href: "/plugins" },
-  { index: "03", title: "Elementor", note: "واجهات سهلة التعديل", href: "/themes" },
-  { index: "04", title: "مواقع مخصصة", note: "تصميم وتطوير حسب الطلب", href: "/contact" },
+const quickCategories = [
+  { key: "themes", title: "قوالب WordPress", note: "متاجر، شركات وخدمات", href: "/themes" },
+  { key: "plugins", title: "إضافات WordPress", note: "أدوات مركزة وخفيفة", href: "/plugins" },
+  { key: "store", title: "WooCommerce", note: "تجارب شراء عربية", href: "/themes" },
+  { key: "elementor", title: "Elementor", note: "واجهات سهلة التعديل", href: "/themes" },
+  { key: "speed", title: "السرعة والأداء", note: "بنية أخف للموبايل", href: "/blog" },
+  { key: "seo", title: "SEO والمحتوى", note: "مقالات ودلائل عملية", href: "/blog" },
+  { key: "custom", title: "تنفيذ مخصص", note: "موقع حسب مشروعك", href: "/contact" },
+  { key: "support", title: "دعم مباشر", note: "تواصل على واتساب", href: "/contact" },
 ];
+
+function CategoryIcon({ type }: { type: string }) {
+  const common = { width: 26, height: 26, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  if (type === "themes") return <svg {...common}><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8M12 18v2"/></svg>;
+  if (type === "plugins") return <svg {...common}><path d="M9.5 3v4M14.5 3v4M7 7h10v4a5 5 0 0 1-10 0V7Z"/><path d="M12 16v5"/></svg>;
+  if (type === "store") return <svg {...common}><path d="M4 9h16l-1 11H5L4 9Z"/><path d="M7 9a5 5 0 0 1 10 0"/></svg>;
+  if (type === "elementor") return <svg {...common}><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>;
+  if (type === "speed") return <svg {...common}><path d="M5 18a8 8 0 1 1 14 0"/><path d="m12 14 4-5"/><path d="M4 18h16"/></svg>;
+  if (type === "seo") return <svg {...common}><circle cx="11" cy="11" r="6"/><path d="m16 16 5 5M8 12l2-2 2 2 3-4"/></svg>;
+  if (type === "custom") return <svg {...common}><path d="m4 17 6-6 3 3 7-7"/><path d="M15 7h5v5"/><path d="M4 21h16"/></svg>;
+  return <svg {...common}><path d="M4 5h16v12H7l-3 3V5Z"/><path d="M8 9h8M8 13h5"/></svg>;
+}
 
 export default async function Home() {
   const [themes, plugins, posts, faqs] = await Promise.all([
@@ -37,7 +51,10 @@ export default async function Home() {
   const featuredTheme = themes[0];
   const featuredImage = featuredTheme
     ? themeImage(featuredTheme.slug, featuredTheme.coverImage)
-    : "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1800&q=82";
+    : "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=84";
+
+  const featuredPlugin = plugins[0];
+  const productCount = themes.length + plugins.length;
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -52,139 +69,171 @@ export default async function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <section className="v11-hero">
-        <div className="shell v11-hero-grid">
-          <div className="v11-hero-copy">
-            <div className="v11-kicker"><i /> ARABIC-FIRST WORDPRESS PRODUCTS</div>
-            <h1>
-              منتجات WordPress<br />
-              <span>جاهزة تبدأ بيها صح.</span>
-            </h1>
+
+      <section className="v12-top-offer">
+        <div className="shell v12-top-offer-inner">
+          <span><b>ArabDEV</b> — منتجات WordPress مبنية للعربي من البداية.</span>
+          <a href={whatsappUrl("مرحباً، أريد الاستفسار عن منتجات ArabDEV")} target="_blank" rel="noreferrer">تواصل معنا ↗</a>
+        </div>
+      </section>
+
+      <section className="v12-hero">
+        <div className="shell v12-hero-grid">
+          <div className="v12-hero-copy">
+            <span className="v12-eyebrow">WORDPRESS PRODUCTS / ARABIC-FIRST</span>
+            <h1>كل اللي تحتاجه<br />لبناء موقع <span>WordPress</span><br />عربي أقوى.</h1>
             <p>
-              قوالب، إضافات، وتنفيذ WordPress مخصص للسوق العربي والخليجي —
-              بواجهة عربية متزنة، موبايل مضبوط، وكود سريع قابل للتوسع.
+              قوالب وإضافات وحلول WordPress موجهة للسوق العربي والخليجي —
+              بواجهات أوضح، RTL حقيقي، تجربة موبايل محسوبة، وكود قابل للنمو.
             </p>
-            <div className="v11-hero-actions">
-              <Link href="/themes" className="v11-btn v11-btn-dark">استكشف القوالب <b>↗</b></Link>
-              <Link href="/plugins" className="v11-btn v11-btn-light">تصفح الإضافات <b>+</b></Link>
+            <div className="v12-hero-actions">
+              <Link href="/themes" className="v12-primary-btn">تصفح القوالب <span>↗</span></Link>
+              <Link href="/plugins" className="v12-secondary-btn">استكشف الإضافات <span>+</span></Link>
             </div>
-            <div className="v11-proof-row">
-              <span><b>RTL</b> عربي من البداية</span>
-              <span><b>Mobile</b> تجربة موبايل حقيقية</span>
-              <span><b>SEO</b> بنية جاهزة للنمو</span>
+            <div className="v12-hero-trust">
+              <div><strong>{String(themes.length).padStart(2, "0")}</strong><span>قوالب منشورة</span></div>
+              <div><strong>{String(plugins.length).padStart(2, "0")}</strong><span>إضافات منشورة</span></div>
+              <div><strong>{String(posts.length).padStart(2, "0")}</strong><span>مقالات ودلائل</span></div>
             </div>
           </div>
 
-          <div className="v11-featured-product">
-            <div className="v11-featured-frame">
-              <img src={featuredImage} alt={featuredTheme?.title || "ArabDEV WordPress product"} fetchPriority="high" decoding="async" />
-              <div className="v11-featured-overlay" />
-              <div className="v11-featured-top"><span>FEATURED DROP</span><span>ARABDEV / 01</span></div>
-              <div className="v11-featured-copy">
-                <small>{featuredTheme?.category || "WORDPRESS / ARABIC-FIRST"}</small>
-                <strong>{featuredTheme?.title || "ArabDEV Starter"}</strong>
-                <p>{featuredTheme?.description || "منتج WordPress عربي مصمم بشكل نظيف وسريع."}</p>
-                {featuredTheme?.externalUrl ? (
-                  <a href={featuredTheme.externalUrl} target="_blank" rel="noopener noreferrer">Live Demo ↗</a>
-                ) : (
-                  <Link href="/themes">عرض المكتبة ↗</Link>
-                )}
+          <div className="v12-hero-product">
+            <div className="v12-product-photo">
+              <img src={featuredImage} alt={featuredTheme?.title || "ArabDEV WordPress Theme"} fetchPriority="high" decoding="async" />
+              <span className="v12-product-shade" />
+              <div className="v12-photo-top"><span>FEATURED THEME</span><span>{featuredTheme?.category || "WORDPRESS"}</span></div>
+              <div className="v12-photo-bottom">
+                <small>{featuredTheme?.label || "ARABIC WORDPRESS"}</small>
+                <h2>{featuredTheme?.title || "ArabDEV Theme"}</h2>
+                <p>{featuredTheme?.description || "واجهة WordPress عربية جاهزة لتبدأ منها بشكل احترافي."}</p>
               </div>
             </div>
-            <div className="v11-floating-card v11-floating-one"><small>THEMES</small><b>{themes.length || "01"}</b><span>منتجات منشورة</span></div>
-            <div className="v11-floating-card v11-floating-two"><small>PLUGINS</small><b>{plugins.length || "01"}</b><span>أدوات عملية</span></div>
+            <div className="v12-product-bar">
+              <div><span>الحالة</span><strong>{featuredTheme?.status || "متاح"}</strong></div>
+              <div><span>السعر</span><strong>{featuredTheme?.price || "قريباً"}</strong></div>
+              {featuredTheme?.externalUrl ? (
+                <a href={featuredTheme.externalUrl} target="_blank" rel="noopener noreferrer">Live Demo ↗</a>
+              ) : (
+                <Link href="/themes">عرض القوالب ↗</Link>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="v11-category-strip">
-        <div className="shell v11-category-grid">
-          {categories.map((item) => (
-            <Link href={item.href} key={item.index}>
-              <span>{item.index}</span>
-              <div><b>{item.title}</b><small>{item.note}</small></div>
-              <i>↗</i>
+      <section className="v12-benefit-strip">
+        <div className="shell">
+          <span>RTL Native</span><i>•</i><span>Mobile First</span><i>•</i><span>SEO Ready</span><i>•</i><span>WooCommerce</span><i>•</i><span>Arabic Typography</span><i>•</i><span>Direct Support</span>
+        </div>
+      </section>
+
+      <section className="shell v12-section v12-categories">
+        <div className="v12-heading-row">
+          <div><span className="v12-eyebrow">BROWSE / START HERE</span><h2>ابدأ من اللي محتاجه.</h2></div>
+          <p>بدل ما تلف بين عشرات الصفحات، اختار نوع الحل وادخل مباشرة للمحتوى أو المنتج المناسب.</p>
+        </div>
+        <div className="v12-category-grid">
+          {quickCategories.map((item) => (
+            <Link href={item.href} key={item.key} className="v12-category-card">
+              <span className="v12-category-icon"><CategoryIcon type={item.key} /></span>
+              <div><strong>{item.title}</strong><small>{item.note}</small></div>
+              <b>↗</b>
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="shell v11-section v11-products-section">
-        <div className="v11-section-head">
-          <div><span className="v11-kicker">THEMES / NEWEST</span><h2>قوالب تبني عليها<br />مش مجرد Demo شكله حلو.</h2></div>
-          <div><p>كل صورة منتج هنا بتتغير من لوحة التحكم. لو ما رفعتش صورة، الموقع يستخدم صورة احترافية مؤقتة لحد ما تضيف الـCover الحقيقي.</p><Link href="/themes">كل القوالب <b>↗</b></Link></div>
-        </div>
-        <div className="v11-theme-grid">
-          {themes.slice(0, 6).map((theme) => <ThemeCard key={theme.slug} theme={theme} />)}
-        </div>
-      </section>
-
-      <section className="v11-dark-band">
-        <div className="shell v11-dark-grid">
-          <div className="v11-dark-intro">
-            <span className="v11-kicker v11-kicker-light">WHY ARABDEV</span>
-            <h2>مش بنضيف RTL<br />في آخر المشروع.</h2>
-            <p>العربي والموبايل والسرعة جزء من أول قرار تصميم، مش تعديلات بنعملها بعد ما الواجهة تخلص.</p>
-            <Link href="/about">اعرف طريقة شغلنا ↗</Link>
+      <section className="v12-popular-wrap">
+        <div className="shell v12-section">
+          <div className="v12-heading-row v12-heading-light">
+            <div><span className="v12-eyebrow">POPULAR / NEW DROPS</span><h2>ابدأ بأحدث المنتجات.</h2></div>
+            <p>كل Cover هنا يأتي من الـDashboard. لو لم ترفع صورة بعد، يظهر fallback احترافي مؤقت فقط.</p>
           </div>
-          <div className="v11-value-grid">
-            <article><span>01</span><h3>Arabic-first</h3><p>Typography ومسافات واتجاهات متظبطة للنص العربي من البداية.</p></article>
-            <article><span>02</span><h3>Performance</h3><p>واجهة أخف، صور محسنة، وJavaScript أقل قدر الإمكان.</p></article>
-            <article><span>03</span><h3>GCC-ready</h3><p>تجربة تناسب المتاجر والخدمات والشركات في السعودية والإمارات والخليج.</p></article>
-            <article><span>04</span><h3>Easy to manage</h3><p>المحتوى والصور والمنتجات تتغير من Dashboard بدل لمس الكود كل مرة.</p></article>
+
+          <div className="v12-product-grid">
+            {themes.slice(0, 2).map((theme, index) => {
+              const image = themeImage(theme.slug, theme.coverImage);
+              const content = <>
+                <div className="v12-catalog-image"><img src={image} alt={theme.title} loading={index === 0 ? "eager" : "lazy"} decoding="async"/><span>{theme.category}</span></div>
+                <div className="v12-catalog-copy"><small>THEME / {theme.status}</small><h3>{theme.title}</h3><p>{theme.description}</p><div><strong>{theme.price}</strong><b>عرض المنتج ↗</b></div></div>
+              </>;
+              return theme.externalUrl ? <a className="v12-catalog-card" href={theme.externalUrl} target="_blank" rel="noopener noreferrer" key={`t-${theme.slug}`}>{content}</a> : <Link className="v12-catalog-card" href="/themes" key={`t-${theme.slug}`}>{content}</Link>;
+            })}
+            {plugins.slice(0, 2).map((plugin) => {
+              const image = pluginImage(plugin.slug, plugin.coverImage);
+              const content = <>
+                <div className="v12-catalog-image"><img src={image} alt={plugin.title} loading="lazy" decoding="async"/><span>{plugin.category}</span></div>
+                <div className="v12-catalog-copy"><small>PLUGIN / {plugin.status}</small><h3>{plugin.title}</h3><p>{plugin.description}</p><div><strong>{plugin.price}</strong><b>عرض المنتج ↗</b></div></div>
+              </>;
+              return plugin.externalUrl ? <a className="v12-catalog-card" href={plugin.externalUrl} target="_blank" rel="noopener noreferrer" key={`p-${plugin.slug}`}>{content}</a> : <Link className="v12-catalog-card" href="/plugins" key={`p-${plugin.slug}`}>{content}</Link>;
+            })}
           </div>
-        </div>
-      </section>
 
-      <section className="shell v11-section v11-plugin-section">
-        <div className="v11-section-head">
-          <div><span className="v11-kicker">PLUGINS / TOOLS</span><h2>إضافات مركزة.<br />كل واحدة تحل حاجة صح.</h2></div>
-          <div><p>بدل Plugin ضخم فيه عشرات المزايا غير المستخدمة، نبني أدوات خفيفة وواضحة للـConversion والمحتوى وWooCommerce.</p><Link href="/plugins">كل الإضافات <b>↗</b></Link></div>
-        </div>
-        <div className="v11-plugin-grid">
-          {plugins.slice(0, 6).map((plugin) => <PluginCard key={plugin.slug} plugin={plugin} />)}
-        </div>
-      </section>
-
-      <section className="v11-help-band">
-        <div className="shell v11-help-grid">
-          <div><small>مش عارف تبدأ منين؟</small><h2>قول لنا مشروعك،<br />ونرشح لك الطريق الأقصر.</h2></div>
-          <div>
-            <p>لو محتاج قالب جاهز، إضافة، أو تنفيذ مخصص، ابعت نوع المشروع والهدف الأساسي وهنقولك الأنسب قبل ما تبدأ.</p>
-            <a href={whatsappUrl("مرحباً، أريد ترشيح أنسب حل لمشروعي على ArabDEV")} target="_blank" rel="noreferrer" className="v11-btn v11-btn-dark">اسأل على واتساب <b>↗</b></a>
+          <div className="v12-catalog-actions">
+            <Link href="/themes">كل القوالب <span>↗</span></Link>
+            <Link href="/plugins">كل الإضافات <span>↗</span></Link>
           </div>
         </div>
       </section>
 
-      <section className="shell v11-section v11-journal-section">
-        <div className="v11-section-head">
-          <div><span className="v11-kicker">JOURNAL / SEO</span><h2>محتوى يساعدك تختار،<br />ويساعدنا نتوجد في البحث.</h2></div>
-          <div><p>مقالات عملية عن WordPress، Elementor، المتاجر، السرعة والـSEO. كل مقال له صورة وصفحة قراءة وبيانات مهيأة لمحركات البحث.</p><Link href="/blog">كل المقالات <b>↗</b></Link></div>
+      <section className="shell v12-section v12-split-feature">
+        <div className="v12-split-copy">
+          <span className="v12-eyebrow">WHY ARABDEV</span>
+          <h2>مش ترجمة لمنتج أجنبي.<br />التجربة نفسها مبنية للعربي.</h2>
+          <p>من الخط والمسافات واتجاه الأيقونات، لصفحات الموبايل والـWooCommerce والـCTA — بنفكر في الاستخدام العربي من البداية.</p>
+          <div className="v12-check-list">
+            <span><b>01</b> Typography عربية مضبوطة</span>
+            <span><b>02</b> Mobile UX قبل المؤثرات</span>
+            <span><b>03</b> أداء وSEO قابلين للنمو</span>
+            <span><b>04</b> إدارة المحتوى من Dashboard</span>
+          </div>
+          <Link href="/about" className="v12-text-link">اعرف أكتر عن ArabDEV ↗</Link>
         </div>
-        <div className="v11-article-grid">
+        <div className="v12-split-media">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=84" alt="فريق يعمل على تصميم وتطوير منتجات رقمية" loading="lazy" decoding="async" />
+          <div className="v12-split-badge"><small>GCC READY</small><strong>Arabic-first</strong><span>Design · Code · Content</span></div>
+        </div>
+      </section>
+
+      <section className="shell v12-section v12-journal">
+        <div className="v12-heading-row">
+          <div><span className="v12-eyebrow">JOURNAL / WORDPRESS</span><h2>محتوى يفيد قبل ما يبيع.</h2></div>
+          <div><p>مقالات عن القوالب والإضافات والسرعة والـSEO وتجربة WordPress بالعربي.</p><Link href="/blog" className="v12-text-link">كل المقالات ↗</Link></div>
+        </div>
+        <div className="v12-article-grid">
           {posts.slice(0, 6).map((post, index) => <ArticleCard key={post.slug} post={post} index={index} />)}
         </div>
       </section>
 
-      <section className="shell v11-section v11-faq-section" id="faq">
-        <div className="v11-faq-head">
-          <span className="v11-kicker">FAQ / BEFORE YOU START</span>
-          <h2>أسئلة قبل ما تبدأ.</h2>
-          <p>الأسئلة دي تقدر تضيفها وتعدلها وتحذفها من Dashboard بعد تشغيل تحديث قاعدة البيانات V11.</p>
+      <section className="v12-stats-band">
+        <div className="shell v12-stats-grid">
+          <div><strong>{productCount || 0}</strong><span>منتج داخل المكتبة</span></div>
+          <div><strong>RTL</strong><span>عربي من التصميم للكود</span></div>
+          <div><strong>GCC</strong><span>السعودية والإمارات والخليج</span></div>
+          <div><strong>1:1</strong><span>تواصل مباشر بدون تعقيد</span></div>
         </div>
-        <div className="v11-faq-list">
+      </section>
+
+      <section className="shell v12-section v12-faq" id="faq">
+        <div className="v12-faq-intro">
+          <span className="v12-eyebrow">FAQ / QUICK ANSWERS</span>
+          <h2>أسئلة قبل ما تبدأ.</h2>
+          <p>الأسئلة دي مربوطة بالـDashboard، تقدر تضيف وتحذف وتعيد ترتيبها بدون تعديل الكود.</p>
+          <a href={whatsappUrl("مرحباً، لدي سؤال عن ArabDEV")} target="_blank" rel="noreferrer" className="v12-text-link">سؤال تاني؟ كلمنا ↗</a>
+        </div>
+        <div className="v12-faq-list">
           {faqs.map((faq, index) => (
             <details key={faq.id || `${faq.question}-${index}`} open={index === 0}>
-              <summary><span>{String(index + 1).padStart(2, "0")}</span><b>{faq.question}</b><i>+</i></summary>
+              <summary><span>{String(index + 1).padStart(2, "0")}</span><strong>{faq.question}</strong><b>+</b></summary>
               <div><p>{faq.answer}</p></div>
             </details>
           ))}
         </div>
       </section>
 
-      <section className="shell v11-final-cta">
-        <div><span>ARABDEV / LET'S BUILD</span><h2>أول منتج عندك<br />يستاهل بداية محترمة.</h2><p>ابدأ بالقالب، الإضافة، أو الموقع المناسب وبعدها نكبر المكتبة والمحتوى واحدة واحدة.</p></div>
-        <a href={whatsappUrl("مرحباً، أريد أن أبدأ مع ArabDEV")} target="_blank" rel="noreferrer"><span>ابدأ الآن</span><b>↗</b></a>
+      <section className="shell v12-last-cta">
+        <div><span className="v12-eyebrow">READY WHEN YOU ARE</span><h2>ابدأ بحاجة صغيرة.<br />وخليها تكبر صح.</h2><p>اختار قالب أو إضافة جاهزة، أو ابعت لنا فكرتك لو محتاج تنفيذ خاص.</p></div>
+        <a href={whatsappUrl("مرحباً، أريد أن أبدأ مشروعاً مع ArabDEV")} target="_blank" rel="noreferrer">ابدأ على واتساب <span>↗</span></a>
       </section>
     </>
   );
