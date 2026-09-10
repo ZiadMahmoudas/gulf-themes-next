@@ -1,0 +1,9 @@
+import Link from "next/link";
+import { requireAdmin } from "@/lib/admin";
+import { deleteArticle } from "@/app/admin/(panel)/actions";
+
+export default async function ArticlesPage({ searchParams }: { searchParams: Promise<{ saved?: string; deleted?: string }> }) {
+  const { supabase } = await requireAdmin(); const q = await searchParams;
+  const { data } = await supabase.from("articles").select("id,title,slug,category,status,published_at,created_at,featured_image").order("created_at", { ascending: false });
+  return <><div className="admin-section-head"><div><small>CONTENT / ARTICLES</small><h1>المقالات</h1><p>أنشئ وعدّل واحذف المقالات والصور والـSEO من مكان واحد.</p></div><Link className="admin-primary" href="/admin/articles/new">+ مقال جديد</Link></div>{(q.saved||q.deleted)&&<div className="admin-alert success">{q.deleted?"تم حذف المقال.":"تم حفظ المقال بنجاح."}</div>}<section className="admin-panel admin-table-panel"><div className="admin-table article-admin-table"><div className="tr th"><span>المقال</span><span>Slug</span><span>التصنيف</span><span>الحالة</span><span>التاريخ</span><span>إجراءات</span></div>{data?.length?data.map((a:any)=><div className="tr" key={a.id}><span className="article-cell">{a.featured_image?<i style={{backgroundImage:`url(${a.featured_image})`}}/>:<i/>}<b>{a.title}</b></span><span dir="ltr">{a.slug}</span><span>{a.category}</span><span><i className={`status ${a.status}`}>{a.status==="published"?"منشور":"مسودة"}</i></span><span>{new Date(a.published_at||a.created_at).toLocaleDateString("ar-EG")}</span><span className="row-actions"><Link href={`/admin/articles/${a.id}`}>تعديل</Link><form action={deleteArticle}><input type="hidden" name="id" value={a.id}/><button type="submit">حذف</button></form></span></div>):<p className="admin-empty">ابدأ بأول مقال في ArabDEV.</p>}</div></section></>;
+}
