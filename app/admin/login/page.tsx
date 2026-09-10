@@ -6,7 +6,7 @@ export const metadata = { title: "دخول الإدارة", robots: { index: fal
 const errorText: Record<string, string> = {
   denied: "هذا الحساب غير مسموح له بالدخول إلى لوحة ArabDEV.",
   credentials: "البريد أو كلمة المرور غير صحيحة.",
-  supabase: "أضف بيانات Supabase في .env.local أولاً.",
+  supabase: "اتصال Supabase غير مضبوط على السيرفر. في Vercel أضف متغيرات Supabase من Settings → Environment Variables ثم اعمل Redeploy.",
 };
 
 export default async function AdminLogin({ searchParams }: { searchParams: Promise<{ error?: string }> }) {

@@ -1,0 +1,26 @@
+ArabDEV V17 — ADMIN LOGIN / VERCEL FIX
+
+Why the Vercel admin login was returning HTTP 500:
+- .env.local is intentionally ignored by Git and is NOT uploaded to Vercel.
+- The login Server Action previously called Supabase even when the Vercel runtime variables were missing.
+
+Required Vercel variables (Project > Settings > Environment Variables):
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+- ADMIN_EMAIL
+- NEXT_PUBLIC_SITE_URL
+
+Recommended scopes: Production + Preview (Development too if you use Vercel dev).
+After saving variables, redeploy the Production deployment.
+
+Supabase Auth:
+- Authentication > Users > Add user
+- Create/confirm the same email used in ADMIN_EMAIL
+- Set a password; there is intentionally no public signup page.
+
+Database:
+- New Supabase project: run supabase/schema.sql, then optionally supabase/seed.sql.
+- Existing ArabDEV project from V10 or earlier: run supabase/v11-update.sql once.
+
+V17 code change:
+- Missing or unavailable Supabase config now returns a friendly /admin/login?error=supabase message instead of crashing the login POST with a 500.
