@@ -4,13 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Brand } from "@/components/Brand";
 
-type IconName = "home" | "themes" | "plugins" | "articles" | "media" | "messages" | "seo" | "settings";
+type IconName = "home" | "themes" | "plugins" | "articles" | "faqs" | "media" | "messages" | "seo" | "settings";
 
 const items: Array<{ href: string; icon: IconName; label: string }> = [
   { href: "/admin", icon: "home", label: "الرئيسية" },
   { href: "/admin/themes", icon: "themes", label: "القوالب" },
   { href: "/admin/plugins", icon: "plugins", label: "الإضافات" },
   { href: "/admin/articles", icon: "articles", label: "المقالات" },
+  { href: "/admin/faqs", icon: "faqs", label: "الأسئلة الشائعة" },
   { href: "/admin/media", icon: "media", label: "الوسائط" },
   { href: "/admin/messages", icon: "messages", label: "الرسائل" },
   { href: "/admin/seo", icon: "seo", label: "تحسين محركات البحث" },
@@ -34,6 +35,7 @@ function Icon({ name }: { name: IconName }) {
   if (name === "themes") return <svg {...common}><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>;
   if (name === "plugins") return <svg {...common}><path d="M9 3h6v4a2 2 0 1 0 4 0V9h2v6h-4a2 2 0 1 0 0 4v2h-6v-4a2 2 0 1 0-4 0v4H3v-6h4a2 2 0 1 0 0-4H3V5h6V3Z"/></svg>;
   if (name === "articles") return <svg {...common}><path d="M6 3h9l3 3v15H6z"/><path d="M14 3v4h4M9 11h6M9 15h6"/></svg>;
+  if (name === "faqs") return <svg {...common}><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.35 2.35 0 1 1 3.9 1.76c-.9.72-1.7 1.2-1.7 2.74"/><path d="M12 17h.01"/></svg>;
   if (name === "media") return <svg {...common}><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m5 18 4.5-4.5 3 3 2-2L19 19"/></svg>;
   if (name === "messages") return <svg {...common}><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>;
   if (name === "seo") return <svg {...common}><path d="M5 20V10M12 20V4M19 20v-7"/><path d="M3 20h18"/></svg>;

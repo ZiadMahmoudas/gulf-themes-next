@@ -21,6 +21,11 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  await supabase.auth.getClaims();
+  try {
+    await supabase.auth.getClaims();
+  } catch {
+    // Never make a public/admin-login request crash because Supabase is temporarily unavailable.
+    return response;
+  }
   return response;
 }

@@ -37,8 +37,15 @@ export type CmsPlugin = PluginItem & {
   demoUrl?: string | null;
 };
 
+export type CmsFaq = {
+  id?: string;
+  question: string;
+  answer: string;
+  sortOrder: number;
+};
+
 type PublicFetchOptions = {
-  tag: "arabdev-articles" | "arabdev-themes" | "arabdev-plugins";
+  tag: "arabdev-articles" | "arabdev-themes" | "arabdev-plugins" | "arabdev-faqs";
   revalidate?: number;
 };
 
@@ -236,5 +243,50 @@ export async function getPluginBySlug(slug: string): Promise<CmsPlugin | null> {
     return rows[0] ? mapPlugin(rows[0]) : null;
   } catch {
     return fallbackPlugins.find((p) => p.slug === slug) || null;
+  }
+}
+
+
+const fallbackFaqs: CmsFaq[] = [
+  {
+    question: "ما الذي تقدمه ArabDEV بالضبط؟",
+    answer: "نبني ونوفر قوالب WordPress وإضافات عملية ومواقع مخصصة موجهة للعربي من البداية، مع اهتمام واضح بالموبايل والأداء والـRTL وتجربة العميل.",
+    sortOrder: 1,
+  },
+  {
+    question: "هل القوالب مناسبة للسعودية والإمارات والخليج؟",
+    answer: "هذا هو الاتجاه الأساسي للمنصة. نهتم بطريقة عرض العربية، سرعة الموبايل، واتساب، WooCommerce، وصفحات الخدمات والمتاجر الشائعة في السوق الخليجي.",
+    sortOrder: 2,
+  },
+  {
+    question: "هل أقدر أشاهد القالب أو الإضافة قبل التواصل؟",
+    answer: "عند توفر نسخة Demo ستجد رابط المعاينة مباشرة على بطاقة المنتج. المنتجات الجديدة يمكن أن تظهر أولاً كقريباً حتى ننتهي من نسخة العرض.",
+    sortOrder: 3,
+  },
+  {
+    question: "هل تنفذون تعديلات أو موقع مخصص؟",
+    answer: "نعم. لو القالب الجاهز لا يغطي احتياج المشروع، تقدر تتواصل معنا لتنفيذ واجهة أو موقع أو وظيفة WordPress مخصصة.",
+    sortOrder: 4,
+  },
+];
+
+export async function getPublishedFaqs(): Promise<CmsFaq[]> {
+  if (!configured()) return fallbackFaqs;
+
+  try {
+    const rows = await publicRest<any>(
+      "faqs",
+      "select=id,question,answer,sort_order&is_published=eq.true&order=sort_order.asc,created_at.asc",
+      { tag: "arabdev-faqs" },
+    );
+    if (!rows.length) return fallbackFaqs;
+    return rows.map((row) => ({
+      id: row.id,
+      question: row.question,
+      answer: row.answer,
+      sortOrder: Number(row.sort_order || 0),
+    }));
+  } catch {
+    return fallbackFaqs;
   }
 }

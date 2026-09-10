@@ -209,3 +209,40 @@ export async function saveSettings(fd: FormData) {
   revalidatePath("/", "layout");
   redirect("/admin/settings?saved=1");
 }
+
+
+export async function saveFaq(fd: FormData) {
+  const { supabase } = await requireAdmin();
+  const id = val(fd, "id");
+  const payload = {
+    question: val(fd, "question"),
+    answer: val(fd, "answer"),
+    sort_order: Number(val(fd, "sort_order") || 0),
+    is_published: val(fd, "is_published") !== "false",
+  };
+
+  if (!payload.question || !payload.answer) {
+    redirect(`/admin/faqs/${id || "new"}?error=required`);
+  }
+
+  const query = id
+    ? supabase.from("faqs").update(payload).eq("id", id)
+    : supabase.from("faqs").insert(payload);
+  const { error } = await query;
+  if (error) redirect(`/admin/faqs/${id || "new"}?error=${encodeURIComponent(error.message)}`);
+
+  updateTag("arabdev-faqs");
+  revalidatePath("/");
+  revalidatePath("/admin/faqs");
+  redirect("/admin/faqs?saved=1");
+}
+
+export async function deleteFaq(fd: FormData) {
+  const { supabase } = await requireAdmin();
+  const id = val(fd, "id");
+  if (id) await supabase.from("faqs").delete().eq("id", id);
+  updateTag("arabdev-faqs");
+  revalidatePath("/");
+  revalidatePath("/admin/faqs");
+  redirect("/admin/faqs?deleted=1");
+}

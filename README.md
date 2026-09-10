@@ -1,3 +1,13 @@
+# ArabDEV V11
+
+Premium Arabic-first WordPress Themes / Plugins / Content platform built with Next.js + Supabase.
+
+**V11 highlights:** rebuilt marketplace homepage, dashboard-driven product images, 3-column article library, editable FAQs, SEO FAQ schema, and more defensive Vercel admin auth routing.
+
+See `V11-INSTALL.txt` and `CHANGES-V11.md`.
+
+---
+
 # ArabDEV V8 — Premium Storefront + Supabase CMS
 
 ArabDEV is a Next.js storefront for Arabic-first WordPress themes, plugins, editorial articles and custom work. The public site reads published content from Supabase; `/admin` remains owner-only.

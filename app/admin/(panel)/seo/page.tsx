@@ -9,7 +9,7 @@ export default async function SeoPage() {
     supabase.from("articles").select("id", { count: "exact", head: true }).eq("status", "draft"),
     supabase.from("articles").select("id,title,slug,seo_title,seo_description").or("seo_title.is.null,seo_description.is.null").limit(8),
   ]);
-  const googleReady = Boolean(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION);
+  const googleReady = Boolean(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "HlAVGimmDYEmGUnPz0d_qfSFLSy-FnMN8aMnmYmSs1Q");
 
   return (
     <>

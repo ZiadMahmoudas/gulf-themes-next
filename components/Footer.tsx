@@ -32,6 +32,7 @@ export function Footer() {
         <div className="footer-links-col">
           <h4>المعرفة</h4>
           <Link href="/blog" prefetch>المقالات والدلائل</Link>
+          <Link href="/#faq">الأسئلة الشائعة</Link>
           <Link href="/about" prefetch>عن ArabDEV</Link>
           <Link href="/contact" prefetch>الدعم والتواصل</Link>
         </div>

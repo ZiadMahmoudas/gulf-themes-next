@@ -61,6 +61,17 @@ create table if not exists public.plugins (
   updated_at timestamptz not null default now()
 );
 
+
+create table if not exists public.faqs (
+  id uuid primary key default gen_random_uuid(),
+  question text not null,
+  answer text not null,
+  sort_order integer not null default 0,
+  is_published boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.contact_messages (
   id uuid primary key default gen_random_uuid(),
   name text not null,
@@ -107,6 +118,10 @@ drop trigger if exists plugins_updated_at on public.plugins;
 create trigger plugins_updated_at before update on public.plugins
 for each row execute function public.set_updated_at();
 
+drop trigger if exists faqs_updated_at on public.faqs;
+create trigger faqs_updated_at before update on public.faqs
+for each row execute function public.set_updated_at();
+
 drop trigger if exists settings_updated_at on public.site_settings;
 create trigger settings_updated_at before update on public.site_settings
 for each row execute function public.set_updated_at();
@@ -115,6 +130,7 @@ for each row execute function public.set_updated_at();
 alter table public.articles enable row level security;
 alter table public.themes enable row level security;
 alter table public.plugins enable row level security;
+alter table public.faqs enable row level security;
 alter table public.contact_messages enable row level security;
 alter table public.site_settings enable row level security;
 
@@ -165,6 +181,23 @@ drop policy if exists "admin delete plugins" on public.plugins;
 create policy "admin delete plugins" on public.plugins for delete to authenticated
 using ((select auth.jwt()->>'email') = 'ziadbobo78@gmail.com');
 
+
+
+-- FAQ public read / admin write.
+drop policy if exists "public read faqs" on public.faqs;
+create policy "public read faqs" on public.faqs for select to anon, authenticated
+using (is_published = true or (select auth.jwt()->>'email') = 'ziadbobo78@gmail.com');
+drop policy if exists "admin insert faqs" on public.faqs;
+create policy "admin insert faqs" on public.faqs for insert to authenticated
+with check ((select auth.jwt()->>'email') = 'ziadbobo78@gmail.com');
+drop policy if exists "admin update faqs" on public.faqs;
+create policy "admin update faqs" on public.faqs for update to authenticated
+using ((select auth.jwt()->>'email') = 'ziadbobo78@gmail.com')
+with check ((select auth.jwt()->>'email') = 'ziadbobo78@gmail.com');
+drop policy if exists "admin delete faqs" on public.faqs;
+create policy "admin delete faqs" on public.faqs for delete to authenticated
+using ((select auth.jwt()->>'email') = 'ziadbobo78@gmail.com');
+
 -- Anyone can send a contact message, nobody public can read it.
 drop policy if exists "public send contact messages" on public.contact_messages;
 create policy "public send contact messages" on public.contact_messages for insert to anon, authenticated
@@ -213,3 +246,5 @@ create index if not exists articles_status_published_idx on public.articles(stat
 create index if not exists themes_status_idx on public.themes(status, created_at desc);
 create index if not exists plugins_status_idx on public.plugins(status, created_at desc);
 create index if not exists contact_messages_status_idx on public.contact_messages(status, created_at desc);
+
+create index if not exists faqs_publish_order_idx on public.faqs(is_published, sort_order, created_at);
