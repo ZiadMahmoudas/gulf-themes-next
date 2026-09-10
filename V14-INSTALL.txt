@@ -1,0 +1,20 @@
+ARABDEV V14 INSTALL
+===================
+
+IMPORTANT:
+Do not merge random old source folders into this version. The safest method is to use this V14 folder as the project folder.
+
+Run:
+1) npm install
+2) npm run dev
+
+If you copy V14 over an older project, use `npm run dev` (not `npx next dev`).
+The predev script automatically removes the stale duplicate route `app/(site)/page.tsx` so `/` cannot keep showing the old homepage.
+
+V14 canonical homepage:
+app/page.tsx
+
+Internal public pages still use:
+app/(site)/layout.tsx
+
+The homepage itself renders the same V13 Header and Footer explicitly, so it has the navbar/footer while avoiding the previous duplicate route problem.

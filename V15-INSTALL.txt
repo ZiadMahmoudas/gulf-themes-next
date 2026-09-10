@@ -1,0 +1,23 @@
+ArabDEV V15
+============
+
+1) Extract this ZIP into a NEW folder.
+2) Run:
+   npm install
+3) Then run:
+   npm run dev
+4) Open:
+   http://localhost:3000
+
+What changed in V15:
+- Header announcement marquee no longer leaves a large empty black area.
+- Homepage hero title is smaller and balanced on desktop.
+- Homepage product filters now actually filter the cards.
+- FAQ opens/closes with a smooth animation.
+- Store/product section typography and spacing are more consistent.
+
+Important:
+Do not copy only app/page.tsx over an older project. V15 also adds two client components and CSS changes:
+- components/HomeStore.tsx
+- components/HomeFaq.tsx
+- app/globals.css

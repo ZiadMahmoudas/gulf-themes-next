@@ -1,0 +1,11 @@
+ArabDEV V16
+============
+
+1. Extract into a NEW folder.
+2. Run: npm install
+3. Run: npm run dev
+
+V16 change:
+- Home store uses Load More instead of the two links below the products.
+- Shows 4 products first and loads 4 additional matching products each click.
+- Filters reset the Load More pagination automatically.
