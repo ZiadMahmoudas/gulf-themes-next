@@ -1,0 +1,16 @@
+ArabDEV V19
+============
+
+1) Keep your existing .env.local file.
+2) Replace the project files with V19.
+3) Clear Next cache:
+   PowerShell: Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+4) Run:
+   npm install
+   npm run dev
+
+Product behavior:
+- Clicking a theme/plugin card opens its ArabDEV details page.
+- Only the "شاهد الآن" button in the details page opens demo_url externally.
+
+No Supabase SQL update is required for V19.

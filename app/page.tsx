@@ -91,8 +91,8 @@ export default async function Home() {
     : heroThemeImage;
 
   const products = [
-    ...themes.slice(0, 4).map((item) => ({ kind: "THEME" as const, item, image: themeImage(item.slug, item.coverImage), href: item.externalUrl || `/themes/${item.slug}` })),
-    ...plugins.slice(0, 4).map((item) => ({ kind: "PLUGIN" as const, item, image: pluginImage(item.slug, item.coverImage), href: item.externalUrl || `/plugins/${item.slug}` })),
+    ...themes.slice(0, 4).map((item) => ({ kind: "THEME" as const, item, image: themeImage(item.slug, item.coverImage), href: `/themes/${item.slug}` })),
+    ...plugins.slice(0, 4).map((item) => ({ kind: "PLUGIN" as const, item, image: pluginImage(item.slug, item.coverImage), href: `/plugins/${item.slug}` })),
   ];
 
   const primaryProducts = products.slice(0, 8);
@@ -106,7 +106,6 @@ export default async function Home() {
     status: item.status,
     image,
     href,
-    external: Boolean(item.externalUrl),
     commerce: /woocommerce|ووكومرس|متجر/i.test(
       `${item.title} ${item.label} ${item.category} ${item.description} ${(item.keywords || []).join(" ")}`,
     ),
@@ -151,11 +150,9 @@ export default async function Home() {
             </div>
 
             <div className="v14-hero-showcase">
-              <a
+              <Link
                 className="v14-hero-main-card"
-                href={featuredTheme?.externalUrl || "/themes"}
-                target={featuredTheme?.externalUrl ? "_blank" : undefined}
-                rel={featuredTheme?.externalUrl ? "noopener noreferrer" : undefined}
+                href={featuredTheme ? `/themes/${featuredTheme.slug}` : "/themes"}
               >
                 <img src={heroThemeImage} alt={featuredTheme?.title || "قالب WordPress عربي"} fetchPriority="high" decoding="async" />
                 <span className="v14-media-shade" />
@@ -164,20 +161,18 @@ export default async function Home() {
                   <small>{featuredTheme?.category || "WORDPRESS THEME"}</small>
                   <h2>{featuredTheme?.title || "قالب عربي احترافي"}</h2>
                   <p>{featuredTheme?.description || "واجهة WordPress مصممة للعربي من أول قرار."}</p>
-                  <div><strong>{featuredTheme?.price || "قريباً"}</strong><span>عرض المنتج ↗</span></div>
+                  <div><strong>{featuredTheme?.price || "قريباً"}</strong><span>شاهد التفاصيل ↗</span></div>
                 </div>
-              </a>
+              </Link>
 
-              <a
+              <Link
                 className="v14-hero-mini-card v14-hero-mini-plugin"
-                href={featuredPlugin?.externalUrl || "/plugins"}
-                target={featuredPlugin?.externalUrl ? "_blank" : undefined}
-                rel={featuredPlugin?.externalUrl ? "noopener noreferrer" : undefined}
+                href={featuredPlugin ? `/plugins/${featuredPlugin.slug}` : "/plugins"}
               >
                 <img src={heroPluginImage} alt={featuredPlugin?.title || "إضافة WordPress"} loading="eager" decoding="async" />
                 <span className="v14-media-shade" />
-                <div><small>PLUGIN PICK</small><b>{featuredPlugin?.title || "WordPress Plugin"}</b><span>{featuredPlugin?.price || "قريباً"} · ↗</span></div>
-              </a>
+                <div><small>PLUGIN PICK</small><b>{featuredPlugin?.title || "WordPress Plugin"}</b><span>شاهد التفاصيل · ↗</span></div>
+              </Link>
 
               <a className="v14-hero-mini-card v14-hero-mini-custom" href={whatsappUrl("مرحباً، أريد تنفيذ WordPress مخصص لمشروعي")} target="_blank" rel="noreferrer">
                 <span className="v14-custom-orbit" aria-hidden="true"><i/><i/><i/></span>
@@ -244,12 +239,11 @@ export default async function Home() {
           </div>
           <div className="v14-feature-grid">
             {featuredProducts.map(({ kind, item, image, href }, index) => {
-              const external = Boolean(item.externalUrl);
               const card = <>
-                <div className="v14-feature-media"><img src={image} alt={item.title} loading="lazy" decoding="async" /><span>{String(index + 1).padStart(2, "0")}</span></div>
-                <div className="v14-feature-copy"><small>{kind} / {item.category}</small><h3>{item.title}</h3><p>{item.description}</p><div><strong>{item.price}</strong><b>↗</b></div></div>
+                <div className="v14-feature-media"><img src={image} alt={item.title} loading="lazy" decoding="async" /><span>{String(index + 1).padStart(2, "0")}</span><i className="v14-feature-overlay-v19">شاهد التفاصيل ↗</i></div>
+                <div className="v14-feature-copy"><small>{kind} / {item.category}</small><h3>{item.title}</h3><p>{item.description}</p><div><strong>{item.price}</strong><b>التفاصيل ↗</b></div></div>
               </>;
-              return external ? <a href={href} target="_blank" rel="noopener noreferrer" className="v14-feature-card" key={`feature-${item.slug}`}>{card}</a> : <Link href={href} className="v14-feature-card" key={`feature-${item.slug}`}>{card}</Link>;
+              return <Link href={href} className="v14-feature-card" key={`feature-${item.slug}`}>{card}</Link>;
             })}
           </div>
         </section>

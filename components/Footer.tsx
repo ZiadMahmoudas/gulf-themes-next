@@ -5,7 +5,7 @@ import { site, whatsappUrl } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="v13-footer">
+    <footer className="v13-footer v19-footer">
       <div className="shell v13-footer-cta">
         <div>
           <span>ARABDEV / WORDPRESS FOR ARABIC BUSINESSES</span>
@@ -15,11 +15,15 @@ export function Footer() {
         <a href={whatsappUrl("مرحباً، أريد ترشيح أنسب حل لمشروعي")} target="_blank" rel="noreferrer">ابدأ المحادثة <b>↗</b></a>
       </div>
 
-      <div className="shell v13-footer-grid">
-        <div className="v13-footer-brand">
+      <div className="shell v13-footer-grid v19-footer-grid">
+        <div className="v13-footer-brand v19-footer-brand">
           <Brand />
+          <div className="v19-footer-social-head">
+            <span>تابع ArabDEV</span>
+            <div className="v13-footer-social"><SocialLinks dark /></div>
+          </div>
           <p>{site.arabicTagline}</p>
-          <div className="v13-footer-social"><SocialLinks dark /></div>
+          <small>Arabic-first · WordPress · GCC</small>
         </div>
 
         <div className="v13-footer-col">
@@ -46,9 +50,9 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="shell v13-footer-bottom">
+      <div className="shell v13-footer-bottom v19-footer-bottom">
         <span>© 2026 ArabDEV. All rights reserved.</span>
-        <span>Arabic-first · WordPress · GCC</span>
+        <span>Built for Arabic WordPress products.</span>
       </div>
     </footer>
   );

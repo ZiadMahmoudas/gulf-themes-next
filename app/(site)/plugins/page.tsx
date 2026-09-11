@@ -26,7 +26,7 @@ export default async function PluginsPage() {
       </div>
 
       <div className="library-strip">
-        <span>Lightweight</span><i>•</i><span>WordPress</span><i>•</i><span>RTL Friendly</span><i>•</i><span>Focused Features</span>
+        <span>Lightweight</span><i>•</i><span>WordPress</span><i>•</i><span>RTL Friendly</span><i>•</i><span>Product Details First</span>
       </div>
 
       <div className="plugins-grid inner-grid">

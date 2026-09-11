@@ -1,9 +1,13 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
-import { getPublishedArticles } from "@/lib/public-data";
+import { getPublishedArticles, getPublishedPlugins, getPublishedThemes } from "@/lib/public-data";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getPublishedArticles();
+  const [posts, themes, plugins] = await Promise.all([
+    getPublishedArticles(),
+    getPublishedThemes(),
+    getPublishedPlugins(),
+  ]);
 
   const staticPages = ["", "/themes", "/plugins", "/blog", "/about", "/contact"].map(
     (path) => ({
@@ -14,10 +18,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   );
 
-  // Themes and plugins point to external destinations, so only their library
-  // pages belong to ArabDEV's sitemap. Articles remain fully internal.
   return [
     ...staticPages,
+    ...themes.map((theme) => ({
+      url: `${site.url}/themes/${theme.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.85,
+    })),
+    ...plugins.map((plugin) => ({
+      url: `${site.url}/plugins/${plugin.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.82,
+    })),
     ...posts.map((post) => ({
       url: `${site.url}/blog/${post.slug}`,
       lastModified: new Date(post.date),

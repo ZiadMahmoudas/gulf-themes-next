@@ -152,9 +152,9 @@ const ARTICLE_LIST_FIELDS =
   "id,slug,title,excerpt,published_at,created_at,category,keywords,featured_image,seo_title,seo_description";
 const ARTICLE_DETAIL_FIELDS = `${ARTICLE_LIST_FIELDS},content_html`;
 const THEME_FIELDS =
-  "id,slug,title,label,category,description,price,features,keywords,cover_image,demo_url,gallery";
+  "id,slug,title,label,category,description,price,features,keywords,cover_image,demo_url,gallery,content_html";
 const PLUGIN_FIELDS =
-  "id,slug,title,label,category,description,price,features,keywords,cover_image,demo_url";
+  "id,slug,title,label,category,description,price,features,keywords,cover_image,demo_url,content_html";
 
 export async function getPublishedArticles(): Promise<CmsPost[]> {
   if (!configured()) return fallbackPosts;
@@ -260,7 +260,7 @@ const fallbackFaqs: CmsFaq[] = [
   },
   {
     question: "هل أقدر أشاهد القالب أو الإضافة قبل التواصل؟",
-    answer: "عند توفر نسخة Demo ستجد رابط المعاينة مباشرة على بطاقة المنتج. المنتجات الجديدة يمكن أن تظهر أولاً كقريباً حتى ننتهي من نسخة العرض.",
+    answer: "كل قالب أو إضافة له صفحة تفاصيل داخل ArabDEV أولاً. بعد قراءة المميزات والوصف تقدر تفتح الـLive Demo الخارجي من زر «شاهد الآن».",
     sortOrder: 3,
   },
   {

@@ -13,7 +13,6 @@ export type HomeStoreProduct = {
   status: string;
   image: string;
   href: string;
-  external: boolean;
   commerce: boolean;
 };
 
@@ -92,6 +91,7 @@ export function HomeStore({ products }: { products: HomeStoreProduct[] }) {
                 />
                 <span className="v14-product-kind">{product.kind}</span>
                 <span className="v14-product-status">{product.status}</span>
+                <span className="v14-product-overlay-v19"><small>اقرأ التفاصيل أولاً</small><b>شاهد التفاصيل ↗</b></span>
               </div>
               <div className="v14-product-body">
                 <small>{product.category}</small>
@@ -105,17 +105,7 @@ export function HomeStore({ products }: { products: HomeStoreProduct[] }) {
             </>
           );
 
-          return product.external ? (
-            <a
-              className="v14-product-card v14-product-card-filtered"
-              href={product.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={`${activeFilter}-${product.kind}-${product.slug}`}
-            >
-              {card}
-            </a>
-          ) : (
+          return (
             <Link
               className="v14-product-card v14-product-card-filtered"
               href={product.href}

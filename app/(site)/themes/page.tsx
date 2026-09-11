@@ -26,7 +26,7 @@ export default async function ThemesPage() {
       </div>
 
       <div className="library-strip">
-        <span>Arabic-first</span><i>•</i><span>Responsive</span><i>•</i><span>Fast Core</span><i>•</i><span>External Live Demos</span>
+        <span>Arabic-first</span><i>•</i><span>Responsive</span><i>•</i><span>Fast Core</span><i>•</i><span>Details before Live Demo</span>
       </div>
 
       <div className="themes-grid inner-grid">
