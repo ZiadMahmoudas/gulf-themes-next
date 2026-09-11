@@ -57,6 +57,7 @@ export default async function ThemeDetailPage({ params }: Props) {
         status={theme.status}
         image={image}
         externalUrl={theme.externalUrl}
+        videoUrl={theme.videoUrl}
         features={theme.features}
         contentHtml={theme.contentHtml}
         gallery={theme.gallery}

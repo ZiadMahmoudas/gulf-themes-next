@@ -57,6 +57,7 @@ export default async function PluginDetailPage({ params }: Props) {
         status={plugin.status}
         image={image}
         externalUrl={plugin.externalUrl}
+        videoUrl={plugin.videoUrl}
         features={plugin.features}
         contentHtml={plugin.contentHtml}
       />

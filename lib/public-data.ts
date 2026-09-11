@@ -28,6 +28,7 @@ export type CmsTheme = ThemeItem & {
   id?: string;
   contentHtml?: string;
   demoUrl?: string | null;
+  videoUrl?: string | null;
   gallery?: string[];
 };
 
@@ -35,6 +36,7 @@ export type CmsPlugin = PluginItem & {
   id?: string;
   contentHtml?: string;
   demoUrl?: string | null;
+  videoUrl?: string | null;
 };
 
 export type CmsFaq = {
@@ -122,6 +124,7 @@ function mapTheme(row: any): CmsTheme {
     contentHtml: row.content_html || "",
     demoUrl: row.demo_url,
     externalUrl: row.demo_url || undefined,
+    videoUrl: row.video_url || null,
     gallery: row.gallery || [],
   };
 }
@@ -145,16 +148,34 @@ function mapPlugin(row: any): CmsPlugin {
     contentHtml: row.content_html || "",
     demoUrl: row.demo_url,
     externalUrl: row.demo_url || undefined,
+    videoUrl: row.video_url || null,
   };
 }
 
 const ARTICLE_LIST_FIELDS =
   "id,slug,title,excerpt,published_at,created_at,category,keywords,featured_image,seo_title,seo_description";
 const ARTICLE_DETAIL_FIELDS = `${ARTICLE_LIST_FIELDS},content_html`;
-const THEME_FIELDS =
+const THEME_FIELDS_LEGACY =
   "id,slug,title,label,category,description,price,features,keywords,cover_image,demo_url,gallery,content_html";
-const PLUGIN_FIELDS =
+const PLUGIN_FIELDS_LEGACY =
   "id,slug,title,label,category,description,price,features,keywords,cover_image,demo_url,content_html";
+const THEME_FIELDS = `${THEME_FIELDS_LEGACY},video_url`;
+const PLUGIN_FIELDS = `${PLUGIN_FIELDS_LEGACY},video_url`;
+
+async function productRest<T>(
+  table: "themes" | "plugins",
+  fields: string,
+  legacyFields: string,
+  suffix: string,
+  tag: "arabdev-themes" | "arabdev-plugins",
+): Promise<T[]> {
+  try {
+    return await publicRest<T>(table, `select=${fields}&${suffix}`, { tag });
+  } catch {
+    // Keeps real Supabase data working before the V20 migration is executed.
+    return publicRest<T>(table, `select=${legacyFields}&${suffix}`, { tag });
+  }
+}
 
 export async function getPublishedArticles(): Promise<CmsPost[]> {
   if (!configured()) return fallbackPosts;
@@ -190,10 +211,12 @@ export async function getPublishedThemes(): Promise<CmsTheme[]> {
   if (!configured()) return fallbackThemes;
 
   try {
-    const rows = await publicRest<any>(
+    const rows = await productRest<any>(
       "themes",
-      `select=${THEME_FIELDS}&status=eq.published&order=created_at.desc`,
-      { tag: "arabdev-themes" },
+      THEME_FIELDS,
+      THEME_FIELDS_LEGACY,
+      "status=eq.published&order=created_at.desc",
+      "arabdev-themes",
     );
     return rows.map(mapTheme);
   } catch {
@@ -205,10 +228,12 @@ export async function getThemeBySlug(slug: string): Promise<CmsTheme | null> {
   if (!configured()) return fallbackThemes.find((t) => t.slug === slug) || null;
 
   try {
-    const rows = await publicRest<any>(
+    const rows = await productRest<any>(
       "themes",
-      `select=${THEME_FIELDS}&status=eq.published&slug=eq.${encodeURIComponent(slug)}&limit=1`,
-      { tag: "arabdev-themes" },
+      THEME_FIELDS,
+      THEME_FIELDS_LEGACY,
+      `status=eq.published&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+      "arabdev-themes",
     );
     return rows[0] ? mapTheme(rows[0]) : null;
   } catch {
@@ -220,10 +245,12 @@ export async function getPublishedPlugins(): Promise<CmsPlugin[]> {
   if (!configured()) return fallbackPlugins;
 
   try {
-    const rows = await publicRest<any>(
+    const rows = await productRest<any>(
       "plugins",
-      `select=${PLUGIN_FIELDS}&status=eq.published&order=created_at.desc`,
-      { tag: "arabdev-plugins" },
+      PLUGIN_FIELDS,
+      PLUGIN_FIELDS_LEGACY,
+      "status=eq.published&order=created_at.desc",
+      "arabdev-plugins",
     );
     return rows.map(mapPlugin);
   } catch {
@@ -235,10 +262,12 @@ export async function getPluginBySlug(slug: string): Promise<CmsPlugin | null> {
   if (!configured()) return fallbackPlugins.find((p) => p.slug === slug) || null;
 
   try {
-    const rows = await publicRest<any>(
+    const rows = await productRest<any>(
       "plugins",
-      `select=${PLUGIN_FIELDS}&status=eq.published&slug=eq.${encodeURIComponent(slug)}&limit=1`,
-      { tag: "arabdev-plugins" },
+      PLUGIN_FIELDS,
+      PLUGIN_FIELDS_LEGACY,
+      `status=eq.published&slug=eq.${encodeURIComponent(slug)}&limit=1`,
+      "arabdev-plugins",
     );
     return rows[0] ? mapPlugin(rows[0]) : null;
   } catch {

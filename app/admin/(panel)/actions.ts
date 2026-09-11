@@ -95,9 +95,10 @@ async function saveProduct(fd: FormData, table: "themes" | "plugins") {
   const { supabase } = await requireAdmin();
   const id = val(fd, "id");
   const title = val(fd, "title");
-  const existingSlug = val(fd, "slug");
+  const requestedSlug = val(fd, "slug");
   const rawExternalUrl = val(fd, "demo_url");
   const externalUrl = normalizeExternalUrl(rawExternalUrl);
+  const productSlug = requestedSlug || internalSlug(title);
 
   if (!title) {
     redirect(`/admin/${table}/${id || "new"}?error=required`);
@@ -109,14 +110,14 @@ async function saveProduct(fd: FormData, table: "themes" | "plugins") {
 
   const payload: Record<string, unknown> = {
     title,
-    // Internal database slug only. It is not entered by the admin and is not
-    // used as the public destination for themes/plugins.
-    slug: existingSlug || internalSlug(title),
+    // Public internal product URL. Editable from the dashboard.
+    slug: productSlug,
     label: val(fd, "label"),
     category: val(fd, "category") || "WordPress",
     description: val(fd, "description"),
     content_html: val(fd, "content_html"),
     cover_image: val(fd, "cover_image") || null,
+    video_url: val(fd, "video_url") || null,
     price: val(fd, "price") || "قريباً",
     features: list(fd.get("features")),
     // Existing DB column retained for backwards compatibility. In V6 it is
@@ -143,6 +144,7 @@ async function saveProduct(fd: FormData, table: "themes" | "plugins") {
 
   updateTag(table === "themes" ? "arabdev-themes" : "arabdev-plugins");
   revalidatePath(`/${table}`);
+  revalidatePath(`/${table}/${productSlug}`);
   revalidatePath(`/admin/${table}`);
   revalidatePath("/");
   revalidatePath("/sitemap.xml");
@@ -164,6 +166,7 @@ export async function deleteProduct(fd: FormData) {
   if (id) await supabase.from(table).delete().eq("id", id);
   updateTag(table === "themes" ? "arabdev-themes" : "arabdev-plugins");
   revalidatePath(`/${table}`);
+  revalidatePath(`/${table}/${productSlug}`);
   revalidatePath(`/admin/${table}`);
   revalidatePath("/");
   redirect(`/admin/${table}?deleted=1`);

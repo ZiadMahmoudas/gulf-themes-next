@@ -1,5 +1,6 @@
 import { saveTheme, savePlugin, deleteProduct } from "@/app/admin/(panel)/actions";
 import { MediaUpload } from "@/components/admin/MediaUpload";
+import { ProductNameSlugFields } from "@/components/admin/ProductNameSlugFields";
 import { RichEditor } from "@/components/admin/RichEditor";
 
 type Product = {
@@ -11,6 +12,7 @@ type Product = {
   description?: string;
   content_html?: string | null;
   cover_image?: string | null;
+  video_url?: string | null;
   gallery?: string[] | null;
   price?: string;
   features?: string[] | null;
@@ -37,12 +39,6 @@ export function ProductForm({
       <input type="hidden" name="id" value={product.id || ""} />
       <input type="hidden" name="table" value={type} />
 
-      {/*
-        slug is internal only for database uniqueness/backwards compatibility.
-        The admin never needs to type it for themes/plugins.
-      */}
-      <input type="hidden" name="slug" value={product.slug || ""} />
-
       <div className="editor-head">
         <div>
           <small>{isTheme ? "THEME" : "PLUGIN"} / EDITOR</small>
@@ -63,18 +59,15 @@ export function ProductForm({
 
       <div className="editor-layout">
         <section className="admin-panel editor-main">
-          <label className="admin-field">
-            <span>الاسم</span>
-            <input
-              name="title"
-              defaultValue={product.title || ""}
-              required
-              placeholder={isTheme ? "GulfShop" : "WhatsApp Pulse"}
-            />
-          </label>
+          <ProductNameSlugFields
+            initialTitle={product.title || ""}
+            initialSlug={product.slug || ""}
+            placeholder={isTheme ? "GulfShop" : "WP Rocket"}
+            basePath={isTheme ? "/themes" : "/plugins"}
+          />
 
           <label className="admin-field">
-            <span>{isTheme ? "رابط القالب الخارجي" : "رابط الإضافة الخارجي"}</span>
+            <span>{isTheme ? "رابط المعاينة / الشراء الخارجي" : "رابط المعاينة / الشراء الخارجي"}</span>
             <input
               name="demo_url"
               type="url"
@@ -85,7 +78,7 @@ export function ProductForm({
               autoComplete="url"
             />
             <small className="admin-field-help">
-              اكتب الرابط كاملًا. يقبل https:// والدومين والمسار والـ query بدون أي تعديل.
+              الزائر يدخل صفحة التفاصيل داخل ArabDEV أولًا، وبعدها فقط يفتح الرابط الخارجي من زر «شاهد الآن».
             </small>
           </label>
 
@@ -114,6 +107,7 @@ export function ProductForm({
               name="description"
               defaultValue={product.description || ""}
               rows={4}
+              placeholder="اشرح بسرعة المشكلة التي يحلها المنتج ولماذا هو مفيد."
             />
           </label>
 
@@ -135,18 +129,31 @@ export function ProductForm({
             </label>
             <label className="admin-field">
               <span>السعر</span>
-              <input name="price" defaultValue={product.price || "قريباً"} />
+              <input name="price" defaultValue={product.price || "قريباً"} placeholder="199 ر.س" />
             </label>
           </section>
 
           <section className="admin-panel">
-            <h3>الصور والمميزات</h3>
+            <h3>الوسائط</h3>
             <MediaUpload
               name="cover_image"
               initial={product.cover_image}
-              label="صورة المنتج"
+              label="صورة المنتج الرئيسية"
             />
 
+            <MediaUpload
+              name="video_url"
+              initial={product.video_url}
+              label="فيديو شرح / Preview"
+              kind="video"
+            />
+            <p className="admin-media-note-v20">
+              الفيديو اختياري ويظهر داخل صفحة التفاصيل مع Controls. يفضل فيديو MP4/WebM قصير ومضغوط لتحافظ على سرعة الموقع.
+            </p>
+          </section>
+
+          <section className="admin-panel">
+            <h3>المميزات</h3>
             <label className="admin-field">
               <span>المميزات — مفصولة بفاصلة</span>
               <textarea
@@ -170,7 +177,7 @@ export function ProductForm({
           </section>
 
           <section className="admin-panel seo-box">
-            <h3>SEO لقائمة المنتجات</h3>
+            <h3>SEO للمنتج</h3>
             <label className="admin-field">
               <span>SEO Title</span>
               <input name="seo_title" defaultValue={product.seo_title || ""} />

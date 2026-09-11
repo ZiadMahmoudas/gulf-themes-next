@@ -1,0 +1,10 @@
+ArabDEV V21 installation
+
+1) Keep your existing .env.local file.
+2) Replace project files with V21.
+3) Clear Next cache:
+   PowerShell: Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+4) Run: npm install
+5) Run: npm run dev
+
+No SQL update is required for V21.

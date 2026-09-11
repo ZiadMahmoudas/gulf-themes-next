@@ -133,7 +133,8 @@ export default async function Home() {
           <div className="shell v14-hero-grid">
             <div className="v14-hero-copy">
               <span className="v14-eyebrow"><i /> ARABDEV / WORDPRESS STORE</span>
-              <h1><span className="v14-title-line">كل اللي تحتاجه</span><span className="v14-title-line">لموقع <em>WordPress</em></span><span className="v14-title-line">عربي أقوى.</span></h1>
+              <h1 className="v20-home-title"><span>كل اللي تحتاجه</span><span>لموقع عربي أقوى.</span></h1>
+              <div className="v20-wordpress-signature" dir="ltr"><b>WordPress</b><span>THEMES · PLUGINS · CUSTOM</span></div>
               <p>
                 قوالب وإضافات وحلول مخصصة للسوق العربي والخليجي — RTL حقيقي،
                 تجربة موبايل محسوبة، وأداء نظيف من غير تعقيد.
@@ -179,6 +180,13 @@ export default async function Home() {
                 <div><small>CUSTOM BUILD</small><b>مش لاقي الجاهز؟</b><span>ننفذه مخصوص · ↗</span></div>
               </a>
             </div>
+          </div>
+        </section>
+
+        <section className="v20-sales-strip">
+          <div className="shell v20-sales-strip-inner">
+            <div><small>ابدأ أسرع، وعدّل براحتك</small><strong>بدل ما تبني كل شيء من الصفر، اختار أساس جاهز وخلّي وقتك للتطوير والبيع.</strong></div>
+            <div><Link href="/themes">شوف القوالب ↗</Link><Link href="/plugins">شوف الإضافات +</Link></div>
           </div>
         </section>
 

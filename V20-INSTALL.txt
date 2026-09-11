@@ -1,0 +1,32 @@
+ArabDEV V20 install
+===================
+
+1) Keep your current .env.local / Vercel Environment Variables.
+2) Replace the project files with V20.
+3) Supabase > SQL Editor > run:
+   supabase/v20-update.sql
+4) Clear Next cache and restart:
+
+PowerShell:
+Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+npm install
+npm run dev
+
+Production test:
+npm run build
+npm start
+
+IMPORTANT ABOUT OLD PRODUCT LINKS
+---------------------------------
+Product NAME and product URL SLUG are separate fields.
+Open the product in Admin. You will now see:
+"رابط صفحة المنتج داخل ArabDEV"
+
+If an old product called Flexible Form still has:
+/plugins/gulf-commerce-ux
+click "من الاسم" and save. It becomes a clean slug based on the current title.
+
+VIDEO
+-----
+The product editor now has a Video Preview upload.
+Recommended: short MP4/WebM under 30MB.

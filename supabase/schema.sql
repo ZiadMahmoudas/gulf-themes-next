@@ -29,6 +29,7 @@ create table if not exists public.themes (
   description text default '',
   content_html text default '',
   cover_image text,
+  video_url text,
   gallery text[] default '{}',
   price text default 'قريباً',
   features text[] default '{}',
@@ -50,6 +51,7 @@ create table if not exists public.plugins (
   description text default '',
   content_html text default '',
   cover_image text,
+  video_url text,
   price text default 'قريباً',
   features text[] default '{}',
   demo_url text,
@@ -223,8 +225,11 @@ with check ((select auth.jwt()->>'email') = 'ziadbobo78@gmail.com');
 
 -- Storage bucket for all CMS images.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('media', 'media', true, 10485760, array['image/jpeg','image/png','image/webp','image/gif'])
-on conflict (id) do update set public = excluded.public;
+values ('media', 'media', true, 31457280, array['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm','video/quicktime','video/x-m4v'])
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
 
 drop policy if exists "public read media" on storage.objects;
 create policy "public read media" on storage.objects for select to public using (bucket_id = 'media');
