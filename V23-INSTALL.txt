@@ -1,0 +1,18 @@
+ArabDEV V23
+
+1) Keep your current .env.local.
+2) Replace the project files with V23 (do not nest the V23 folder inside the project).
+3) Delete the old Next build cache:
+   PowerShell:
+   Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+4) Run:
+   npm install
+   npm run dev
+5) Open an article editor. You MUST see:
+   EDITOR V23
+   نوع النص: P / H1 / H2 / H3 / H4 / H5 / H6
+   + رفع صورة
+
+If the toolbar still shows only H2/H3/Image/Clear, the running deployment is an old build, not V23.
+
+For Vercel: redeploy after replacing the source files, and disable/rebuild cache once if necessary.
