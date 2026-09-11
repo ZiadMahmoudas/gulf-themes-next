@@ -46,6 +46,11 @@ export function MediaUpload({
       }
 
       const supabase = createClient();
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError || !authData.user) {
+        throw new Error("جلسة الأدمن غير متاحة. اعمل Refresh وسجّل الدخول مرة أخرى.");
+      }
+
       const ext = file.name.split(".").pop()?.toLowerCase() || (kind === "video" ? "mp4" : "jpg");
       const folder = kind === "video" ? "videos" : "images";
       const path = `${folder}/${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${ext}`;
@@ -63,7 +68,8 @@ export function MediaUpload({
       const { data } = supabase.storage.from("media").getPublicUrl(path);
       setUrl(data.publicUrl);
     } catch (err: any) {
-      setError(err?.message || `تعذر رفع ${kind === "video" ? "الفيديو" : "الصورة"}`);
+      const message = String(err?.message || `تعذر رفع ${kind === "video" ? "الفيديو" : "الصورة"}`);
+      setError(message.includes("row-level security") ? "Supabase رفض الرفع بسبب صلاحيات Storage. تأكد من تشغيل schema.sql / سياسات media ثم سجّل الدخول من جديد." : message);
     } finally {
       setBusy(false);
     }

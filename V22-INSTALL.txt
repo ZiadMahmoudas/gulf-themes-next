@@ -1,0 +1,22 @@
+ArabDEV V22 install
+===================
+1) Keep your current .env.local / Vercel Environment Variables.
+2) Replace the running project files with this V22 project ROOT (do not copy the outer folder into the project as a nested folder).
+3) Delete .next.
+4) npm install
+5) npm run dev
+
+Verification:
+- Open /admin/articles/new or edit an article.
+- Above the editor you MUST see: EDITOR V22
+- First toolbar row MUST show: P H1 H2 H3 H4 H5 H6
+- If you still only see H2/H3, the old project/build is still running.
+
+Vercel:
+- Redeploy after replacing the files.
+- Prefer "Redeploy without build cache" once if the old toolbar is still shown.
+
+Image upload:
+- Supported: JPG, PNG, WEBP, GIF up to 10MB.
+- If an error is returned it is now shown directly under the toolbar.
+- If Supabase reports RLS, run the Storage policies from supabase/schema.sql and login again.
