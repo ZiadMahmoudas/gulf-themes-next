@@ -1,0 +1,10 @@
+ArabDEV V25
+
+1) Replace your current project with this folder / push it to GitHub.
+2) No Supabase migration is required.
+3) No new npm packages were added.
+4) On Vercel, Redeploy the latest commit. If Vercel still shows an old visual, redeploy once without Build Cache.
+
+Main visible changes:
+- Article detail is light/warm instead of full dark.
+- Theme / Plugin / Article cards have clean images with ALL text below the image.

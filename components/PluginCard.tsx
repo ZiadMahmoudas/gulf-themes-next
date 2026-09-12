@@ -7,16 +7,30 @@ export function PluginCard({ plugin }: { plugin: PluginItem }) {
   const detailUrl = `/plugins/${plugin.slug}`;
 
   return (
-    <article className={`plugin-card plugin-${plugin.slug}`} data-reveal="soft">
-      <Link className="plugin-visual has-cover plugin-photo-visual" href={detailUrl} aria-label={`قراءة تفاصيل ${plugin.title}`}>
-        <img src={image} alt="" aria-hidden="true" className="plugin-cover-image" loading="lazy" decoding="async" />
-        <span className="plugin-cover-shade" aria-hidden="true" />
-        <div className="plugin-card-top"><span>{plugin.accent}</span><b>{plugin.category}</b></div>
-        <div className="plugin-photo-panel" aria-hidden="true"><small>WORDPRESS PLUGIN</small><strong>{plugin.title}</strong><span>{plugin.label}</span></div>
-        <span className="product-hover-overlay-v19"><small>اعرف المنتج قبل المعاينة</small><b>شاهد التفاصيل ↗</b></span>
+    <article className={`plugin-card product-library-card plugin-${plugin.slug}`} data-reveal="soft">
+      <Link className="plugin-visual has-cover plugin-photo-visual product-card-media" href={detailUrl} aria-label={`قراءة تفاصيل ${plugin.title}`}>
+        <img src={image} alt={plugin.title} className="plugin-cover-image" loading="lazy" decoding="async" />
       </Link>
-      <div className="theme-meta"><span>{plugin.status}</span><span>{plugin.category} / Modular</span></div>
-      <div className="theme-title-row"><div><h3>{plugin.title}</h3><p>{plugin.description}</p></div><Link className="circle-link" href={detailUrl} aria-label={`قراءة تفاصيل ${plugin.title}`}>↗</Link></div>
+
+      <div className="product-card-body">
+        <div className="product-card-meta">
+          <span className="product-kind">PLUGIN / {plugin.category}</span>
+          <span className="product-status">{plugin.status}</span>
+        </div>
+
+        <div className="product-card-heading">
+          <div>
+            <h3><Link href={detailUrl}>{plugin.title}</Link></h3>
+            <p>{plugin.description}</p>
+          </div>
+          <Link className="product-card-arrow" href={detailUrl} aria-label={`قراءة تفاصيل ${plugin.title}`}>↗</Link>
+        </div>
+
+        <div className="product-card-foot">
+          <span>{plugin.label}</span>
+          <Link href={detailUrl}>شاهد التفاصيل <b>↗</b></Link>
+        </div>
+      </div>
     </article>
   );
 }
