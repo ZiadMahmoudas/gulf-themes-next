@@ -1,0 +1,7 @@
+ArabDEV V26
+
+1. Upload this project version to GitHub/Vercel.
+2. Redeploy normally. No new environment variables or packages are required.
+3. Hard refresh the browser after deployment.
+
+Main change: calmer, more professional Arabic typography across the entire public website.
