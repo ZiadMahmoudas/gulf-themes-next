@@ -163,12 +163,17 @@ export async function deleteProduct(fd: FormData) {
   const { supabase } = await requireAdmin();
   const table = val(fd, "table") === "plugins" ? "plugins" : "themes";
   const id = val(fd, "id");
+
+  // productSlug used to be referenced here without being defined, which makes
+  // `next build` fail during TypeScript checking on Vercel. The collection
+  // pages are enough to invalidate after deletion; the deleted detail route
+  // no longer needs to be regenerated.
   if (id) await supabase.from(table).delete().eq("id", id);
   updateTag(table === "themes" ? "arabdev-themes" : "arabdev-plugins");
   revalidatePath(`/${table}`);
-  revalidatePath(`/${table}/${productSlug}`);
   revalidatePath(`/admin/${table}`);
   revalidatePath("/");
+  revalidatePath("/sitemap.xml");
   redirect(`/admin/${table}?deleted=1`);
 }
 

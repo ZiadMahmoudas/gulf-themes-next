@@ -1,0 +1,24 @@
+ArabDEV V24
+
+1) Replace the project files with this version.
+2) Keep your existing Vercel Environment Variables / .env.local values.
+3) Run locally if you want:
+   npm install
+   npm run build
+4) Deploy to Vercel.
+5) Open Admin > Articles > New/Edit.
+
+You should see:
+- EDITOR V24
+- نوع النص: P / H1 / H2 / H3 / H4 / H5 / H6
+- حجم الخط: 12px to 36px
+- + رفع صورة هنا
+
+Image upload requirements:
+- Supabase Storage bucket must be named: media
+- The signed-in admin user must have insert permission on that bucket.
+- The bucket needs public read access if you want the image URL to render publicly.
+
+Important build fix included:
+- undefined `productSlug` reference removed from deleteProduct
+- duplicate root route removed permanently

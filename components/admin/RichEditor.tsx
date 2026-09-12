@@ -9,6 +9,7 @@ type RichEditorProps = {
 };
 
 type BlockTag = "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+type LegacyFontSize = "1" | "2" | "3" | "4" | "5" | "6" | "7";
 
 const BLOCKS: { label: string; value: BlockTag }[] = [
   { label: "P — فقرة عادية", value: "p" },
@@ -20,6 +21,17 @@ const BLOCKS: { label: string; value: BlockTag }[] = [
   { label: "H6 — عنوان مستوى 6", value: "h6" },
 ];
 
+const FONT_SIZES: { label: string; value: LegacyFontSize; px: number }[] = [
+  { label: "12 px", value: "1", px: 12 },
+  { label: "14 px", value: "2", px: 14 },
+  { label: "16 px", value: "3", px: 16 },
+  { label: "18 px", value: "4", px: 18 },
+  { label: "22 px", value: "5", px: 22 },
+  { label: "28 px", value: "6", px: 28 },
+  { label: "36 px", value: "7", px: 36 },
+];
+
+const FONT_SIZE_BY_LEGACY = new Map(FONT_SIZES.map((size) => [size.value, size.px]));
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
@@ -39,23 +51,43 @@ function escapeHtml(value: string) {
     .replaceAll(">", "&gt;");
 }
 
+function normalizeLegacyFontSizes(editor: HTMLElement) {
+  const legacyFonts = Array.from(editor.querySelectorAll<HTMLFontElement>("font[size]"));
+  legacyFonts.forEach((font) => {
+    const raw = font.getAttribute("size") as LegacyFontSize | null;
+    const px = raw ? FONT_SIZE_BY_LEGACY.get(raw) : undefined;
+    if (!px) return;
+
+    const span = document.createElement("span");
+    span.style.fontSize = `${px}px`;
+    while (font.firstChild) span.appendChild(font.firstChild);
+    font.replaceWith(span);
+  });
+}
+
 export function RichEditor({ initial = "", name = "content_html" }: RichEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const savedRangeRef = useRef<Range | null>(null);
   const [html, setHtml] = useState(initial || "");
   const [activeBlock, setActiveBlock] = useState<BlockTag>("p");
+  const [activeFontSize, setActiveFontSize] = useState<LegacyFontSize>("3");
   const [uploading, setUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
   const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
     const editor = editorRef.current;
-    if (editor && editor.innerHTML !== (initial || "")) editor.innerHTML = initial || "";
+    const nextHtml = initial || "";
+    if (editor && editor.innerHTML !== nextHtml) editor.innerHTML = nextHtml;
+    setHtml(nextHtml);
   }, [initial]);
 
   function syncHtml() {
-    setHtml(editorRef.current?.innerHTML || "");
+    const editor = editorRef.current;
+    if (!editor) return;
+    normalizeLegacyFontSizes(editor);
+    setHtml(editor.innerHTML);
   }
 
   function rememberSelection() {
@@ -70,25 +102,31 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
     const editor = editorRef.current;
     const selection = window.getSelection();
     if (!editor || !selection) return;
-    editor.focus();
+
+    editor.focus({ preventScroll: true });
     selection.removeAllRanges();
-    if (savedRangeRef.current) {
+
+    if (savedRangeRef.current && editor.contains(savedRangeRef.current.commonAncestorContainer)) {
       selection.addRange(savedRangeRef.current);
       return;
     }
+
     const range = document.createRange();
     range.selectNodeContents(editor);
     range.collapse(false);
     selection.addRange(range);
+    savedRangeRef.current = range.cloneRange();
   }
 
   function detectCurrentBlock() {
     const editor = editorRef.current;
     const selection = window.getSelection();
     if (!editor || !selection?.anchorNode || !editor.contains(selection.anchorNode)) return;
+
     let node: Node | null = selection.anchorNode;
     if (node.nodeType === Node.TEXT_NODE) node = node.parentNode;
     let element = node as HTMLElement | null;
+
     while (element && element !== editor) {
       const tag = element.tagName?.toLowerCase() as BlockTag | undefined;
       if (tag && ["p", "h1", "h2", "h3", "h4", "h5", "h6"].includes(tag)) {
@@ -97,6 +135,7 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
       }
       element = element.parentElement;
     }
+
     setActiveBlock("p");
   }
 
@@ -112,6 +151,19 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
     restoreSelection();
     document.execCommand("formatBlock", false, tag);
     setActiveBlock(tag);
+    rememberSelection();
+    syncHtml();
+  }
+
+  function setFontSize(value: LegacyFontSize) {
+    restoreSelection();
+
+    // Keep legacy output only long enough for the browser to apply the format,
+    // then immediately convert it to an inline px style so the saved article is
+    // stable and renders the same in the editor and on the public article page.
+    document.execCommand("styleWithCSS", false, "false");
+    document.execCommand("fontSize", false, value);
+    setActiveFontSize(value);
     rememberSelection();
     syncHtml();
   }
@@ -140,7 +192,9 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
     try {
       const supabase = createClient();
       const { data: authData, error: authError } = await supabase.auth.getUser();
-      if (authError || !authData.user) throw new Error("جلسة الأدمن غير متاحة. اعمل Refresh وسجّل الدخول مرة أخرى.");
+      if (authError || !authData.user) {
+        throw new Error("جلسة الأدمن غير متاحة. اعمل Refresh وسجّل الدخول مرة أخرى.");
+      }
 
       const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
       const path = `articles/${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${ext}`;
@@ -155,11 +209,18 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
       if (!data.publicUrl) throw new Error("تم رفع الصورة لكن تعذر الحصول على رابطها العام.");
 
       const alt = escapeHtml(safeFileBase(file.name));
-      insertHtml(`<figure class="article-media"><img src="${data.publicUrl}" alt="${alt}" loading="lazy"><figcaption>اكتب وصف الصورة هنا أو احذف هذا السطر.</figcaption></figure><p><br></p>`);
-      setUploadMessage("تم رفع الصورة وإضافتها داخل المقال ✓");
-    } catch (error: any) {
-      const message = String(error?.message || "تعذر رفع الصورة");
-      setUploadError(message.includes("row-level security") ? "Supabase رفض رفع الصورة بسبب سياسة Storage. تأكد من سياسة bucket باسم media ثم جرّب من جديد." : message);
+      const src = escapeHtml(data.publicUrl);
+      insertHtml(
+        `<figure class="article-media"><img src="${src}" alt="${alt}" loading="lazy" decoding="async"><figcaption>اكتب وصف الصورة هنا أو احذف هذا السطر.</figcaption></figure><p><br></p>`,
+      );
+      setUploadMessage("تم رفع الصورة وإضافتها في مكان المؤشر داخل المقال ✓");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "تعذر رفع الصورة";
+      setUploadError(
+        message.includes("row-level security")
+          ? "Supabase رفض رفع الصورة بسبب سياسة Storage. تأكد من سياسة bucket باسم media ثم جرّب من جديد."
+          : message,
+      );
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -167,17 +228,17 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
   }
 
   return (
-    <div className="editor-v23-shell">
-      <div className="editor-v23-head">
+    <div className="editor-v24-shell">
+      <div className="editor-v24-head">
         <div>
           <b>محتوى المقال</b>
-          <span>اختار نوع السطر من القائمة: P للنص العادي، و H1–H6 للعناوين.</span>
+          <span>حدد النص ثم اختار P / H1–H6 أو حجم الخط، والصورة تدخل في نفس مكان المؤشر.</span>
         </div>
-        <em>EDITOR V23</em>
+        <em>EDITOR V24</em>
       </div>
 
-      <div className="editor-v23-toolbar" role="toolbar" aria-label="أدوات كتابة المقال">
-        <label className="editor-v23-block-select">
+      <div className="editor-v24-toolbar" role="toolbar" aria-label="أدوات كتابة المقال">
+        <label className="editor-v24-select">
           <span>نوع النص</span>
           <select
             value={activeBlock}
@@ -185,11 +246,27 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
             onChange={(event) => setBlock(event.target.value as BlockTag)}
             aria-label="اختيار نوع النص"
           >
-            {BLOCKS.map((block) => <option key={block.value} value={block.value}>{block.label}</option>)}
+            {BLOCKS.map((block) => (
+              <option key={block.value} value={block.value}>{block.label}</option>
+            ))}
           </select>
         </label>
 
-        <div className="editor-v23-actions">
+        <label className="editor-v24-select editor-v24-size-select">
+          <span>حجم الخط</span>
+          <select
+            value={activeFontSize}
+            onMouseDown={rememberSelection}
+            onChange={(event) => setFontSize(event.target.value as LegacyFontSize)}
+            aria-label="اختيار حجم الخط"
+          >
+            {FONT_SIZES.map((size) => (
+              <option key={size.value} value={size.value}>{size.label}</option>
+            ))}
+          </select>
+        </label>
+
+        <div className="editor-v24-actions">
           <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => runCommand("bold")} title="Bold"><b>B</b></button>
           <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => runCommand("italic")} title="Italic"><i>I</i></button>
           <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => runCommand("underline")} title="Underline"><u>U</u></button>
@@ -205,12 +282,12 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
           >رابط</button>
           <button
             type="button"
-            className="editor-v23-image"
+            className="editor-v24-image"
             disabled={uploading}
             onMouseDown={() => rememberSelection()}
             onClick={() => fileInputRef.current?.click()}
           >
-            {uploading ? "جاري رفع الصورة…" : "+ رفع صورة"}
+            {uploading ? "جاري رفع الصورة…" : "+ رفع صورة هنا"}
           </button>
           <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => runCommand("undo")} title="تراجع">↶</button>
           <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => runCommand("redo")} title="إعادة">↷</button>
@@ -219,7 +296,7 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
 
         <input
           ref={fileInputRef}
-          className="editor-v23-file"
+          className="editor-v24-file"
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif"
           onChange={(event) => {
@@ -229,28 +306,31 @@ export function RichEditor({ initial = "", name = "content_html" }: RichEditorPr
         />
       </div>
 
-      <div className="editor-v23-guide">
-        <span><b>P</b> فقرة عادية</span>
+      <div className="editor-v24-guide">
+        <span><b>P</b> فقرة</span>
         <span><b>H1</b> عنوان رئيسي</span>
-        <span><b>H2</b> قسم رئيسي</span>
-        <span><b>H3–H6</b> مستويات فرعية</span>
-        <span><b>+ صورة</b> ترفع داخل نفس مكان المؤشر</span>
+        <span><b>H2</b> قسم</span>
+        <span><b>H3–H6</b> عناوين فرعية</span>
+        <span><b>12–36px</b> تحكم مباشر في حجم النص المحدد</span>
+        <span><b>+ صورة هنا</b> Upload في مكان المؤشر</span>
       </div>
 
       {(uploadMessage || uploadError) && (
-        <div className={`editor-v23-status ${uploadError ? "is-error" : "is-success"}`} role="status">{uploadError || uploadMessage}</div>
+        <div className={`editor-v24-status ${uploadError ? "is-error" : "is-success"}`} role="status">
+          {uploadError || uploadMessage}
+        </div>
       )}
 
       <div
         ref={editorRef}
-        className="editor-v23-canvas"
+        className="editor-v24-canvas"
         contentEditable
         suppressContentEditableWarning
         onInput={() => { syncHtml(); rememberSelection(); detectCurrentBlock(); }}
         onKeyUp={() => { rememberSelection(); detectCurrentBlock(); }}
         onMouseUp={() => { rememberSelection(); detectCurrentBlock(); }}
         onFocus={() => { rememberSelection(); detectCurrentBlock(); }}
-        data-placeholder="ابدأ الكتابة هنا… اختار P أو H1–H6 من فوق، وارفع الصورة من زر + رفع صورة."
+        data-placeholder="ابدأ الكتابة هنا… اختار P أو H1–H6، غيّر حجم الخط، وحط المؤشر في المكان اللي عايز الصورة تظهر فيه ثم اضغط + رفع صورة هنا."
       />
       <input type="hidden" name={name} value={html} />
     </div>
