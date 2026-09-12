@@ -1,0 +1,3 @@
+- Tightened hero Arabic heading so it reads as a compact flowing headline instead of several stacked lines.
+- Removed all overlay text from the featured hero image so the image displays cleanly by itself.
+- Kept the featured image clickable while preserving the same build-safe structure.

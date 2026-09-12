@@ -1,0 +1,2 @@
+Upload this version over V26, redeploy on Vercel, then hard refresh the home page.
+Check the hero: headline should be more compact and the featured image should show with no text overlay.

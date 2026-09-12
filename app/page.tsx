@@ -69,9 +69,7 @@ export default async function Home() {
             <div className="v23-hero-copy">
               <span className="v23-kicker"><i /> ARABDEV / WORDPRESS PRODUCTS</span>
               <h1>
-                <span>منتجات WordPress</span>
-                <span>مصممة للعربي.</span>
-                <span className="v23-gold">جاهزة تبدأ بيها أسرع.</span>
+                منتجات WordPress مصممة للعربي. <span className="v23-gold">جاهزة تبدأ بيها أسرع.</span>
               </h1>
               <p>
                 قوالب، إضافات، وتنفيذ مخصص بواجهة عربية حقيقية، تجربة موبايل محسوبة،
@@ -89,17 +87,13 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="v23-featured-card">
+            <Link
+              href={featuredTheme ? `/themes/${featuredTheme.slug}` : "/themes"}
+              className="v23-featured-card v23-featured-card-clean"
+              aria-label={featuredTheme?.title || "قالب WordPress عربي"}
+            >
               <img src={featuredImage} alt={featuredTheme?.title || "قالب WordPress عربي"} fetchPriority="high" decoding="async" />
-              <span className="v23-featured-shade" />
-              <div className="v23-featured-top"><span>FEATURED DROP</span><b>01</b></div>
-              <div className="v23-featured-bottom">
-                <small>{featuredTheme?.category || "WORDPRESS THEME"}</small>
-                <h2>{featuredTheme?.title || "قالب عربي جاهز للبدء"}</h2>
-                <p>{featuredTheme?.description || "ابدأ من أساس احترافي وعدّل المحتوى والهوية لمشروعك."}</p>
-                <Link href={featuredTheme ? `/themes/${featuredTheme.slug}` : "/themes"}>شاهد التفاصيل <span>↗</span></Link>
-              </div>
-            </div>
+            </Link>
           </div>
         </section>
 
