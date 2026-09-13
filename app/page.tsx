@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { SiteEffects } from "@/components/SiteEffects";
 import { HomeFaq } from "@/components/HomeFaq";
 import { articleImage, pluginImage, themeImage } from "@/lib/editorial-images";
-import { whatsappUrl } from "@/lib/site";
+import { buildWhatsappUrl, getSiteSettings } from "@/lib/site-settings";
 import { getPublishedArticles, getPublishedFaqs, getPublishedPlugins, getPublishedThemes } from "@/lib/public-data";
 
 export const metadata: Metadata = {
@@ -15,12 +15,16 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [themes, plugins, posts, faqs] = await Promise.all([
+  const [themes, plugins, posts, faqs, settings] = await Promise.all([
     getPublishedThemes(),
     getPublishedPlugins(),
     getPublishedArticles(),
     getPublishedFaqs(),
+    getSiteSettings(),
   ]);
+
+  const customWhatsapp = buildWhatsappUrl(settings.socials.whatsapp || settings.phone, "مرحباً، أريد تنفيذ موقع WordPress مخصص");
+  const productsWhatsapp = buildWhatsappUrl(settings.socials.whatsapp || settings.phone, "مرحباً، أريد الاستفسار عن منتجات ArabDEV");
 
   const featuredTheme = themes[0];
   const featuredPlugin = plugins[0];
@@ -68,8 +72,10 @@ export default async function Home() {
           <div className="shell v23-hero-grid">
             <div className="v23-hero-copy">
               <span className="v23-kicker"><i /> ARABDEV / WORDPRESS PRODUCTS</span>
-              <h1>
-                منتجات WordPress مصممة للعربي. <span className="v23-gold">جاهزة تبدأ بيها أسرع.</span>
+              <h1 className="v28-hero-title">
+                <span className="v28-title-row">منتجات WordPress</span>
+                <span className="v28-title-row">مصممة للعربي.</span>
+                <span className="v23-gold v28-title-row">جاهزة تبدأ بيها أسرع.</span>
               </h1>
               <p>
                 قوالب، إضافات، وتنفيذ مخصص بواجهة عربية حقيقية، تجربة موبايل محسوبة،
@@ -97,9 +103,15 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="v23-trustbar">
-          <div className="shell">
-            <span>WORDPRESS THEMES</span><i>•</i><span>PLUGINS</span><i>•</i><span>ARABIC FIRST</span><i>•</i><span>RTL NATIVE</span><i>•</i><span>MOBILE FIRST</span><i>•</i><span>DIRECT SUPPORT</span>
+        <section className="v23-trustbar" aria-label="مميزات ArabDEV">
+          <div className="v28-trust-track">
+            {[0, 1].map((copy) => (
+              <div className="v28-trust-group" key={copy} aria-hidden={copy === 1}>
+                {["WORDPRESS THEMES", "PLUGINS", "ARABIC FIRST", "RTL NATIVE", "MOBILE FIRST", "DIRECT SUPPORT"].map((item) => (
+                  <span key={`${copy}-${item}`}>{item}<i>•</i></span>
+                ))}
+              </div>
+            ))}
           </div>
         </section>
 
@@ -111,7 +123,7 @@ export default async function Home() {
           <div className="v23-offer-grid">
             <Link href="/themes"><span>01</span><b>قوالب WordPress</b><p>متاجر، شركات، خدمات، وبورتفوليو بواجهات عربية جاهزة للتعديل.</p><em>استكشف القوالب ↗</em></Link>
             <Link href="/plugins"><span>02</span><b>إضافات WordPress</b><p>أدوات عملية خفيفة تضيف وظائف واضحة بدل تحميل الموقع بإضافات ضخمة.</p><em>استكشف الإضافات ↗</em></Link>
-            <a href={whatsappUrl("مرحباً، أريد تنفيذ موقع WordPress مخصص")} target="_blank" rel="noreferrer"><span>03</span><b>تنفيذ مخصص</b><p>لو المنتج الجاهز لا يكفي، نبني لك الواجهة أو الوظيفة حسب مشروعك.</p><em>ابدأ مشروعك ↗</em></a>
+            <a href={customWhatsapp} target="_blank" rel="noreferrer"><span>03</span><b>تنفيذ مخصص</b><p>لو المنتج الجاهز لا يكفي، نبني لك الواجهة أو الوظيفة حسب مشروعك.</p><em>ابدأ مشروعك ↗</em></a>
           </div>
         </section>
 
@@ -158,7 +170,7 @@ export default async function Home() {
 
         <section className="shell v23-final-cta">
           <div><small>READY TO START?</small><h2>لقيت اللي يناسبك؟ ابدأ قبل ما تضيع وقتك في البناء من الصفر.</h2></div>
-          <div><Link href="/themes" className="v23-btn v23-btn-dark">شوف المنتجات ↗</Link><a href={whatsappUrl("مرحباً، أريد الاستفسار عن منتجات ArabDEV")} className="v23-btn v23-btn-light" target="_blank" rel="noreferrer">كلّمنا واتساب</a></div>
+          <div><Link href="/themes" className="v23-btn v23-btn-dark">شوف المنتجات ↗</Link><a href={productsWhatsapp} className="v23-btn v23-btn-light" target="_blank" rel="noreferrer">كلّمنا واتساب</a></div>
         </section>
       </main>
       <Footer />

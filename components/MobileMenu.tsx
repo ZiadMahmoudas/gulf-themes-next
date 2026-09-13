@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { SocialLinks } from "@/components/SocialLinks";
-import { whatsappUrl } from "@/lib/site";
+import type { SiteSocialLinks } from "@/lib/site-settings";
 
 const links = [
   ["/themes", "القوالب", "Themes"],
@@ -15,7 +15,12 @@ const links = [
   ["/contact", "تواصل معنا", "Contact"],
 ];
 
-export function MobileMenu() {
+type Props = {
+  whatsappHref: string;
+  socials: SiteSocialLinks;
+};
+
+export function MobileMenu({ whatsappHref, socials }: Props) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -53,8 +58,8 @@ export function MobileMenu() {
         </nav>
 
         <div className="mobile-menu-footer">
-          <a className="mobile-whatsapp" href={whatsappUrl("مرحباً، أتواصل معكم من موقع ArabDEV")} target="_blank" rel="noreferrer">ابدأ على واتساب <span>↗</span></a>
-          <SocialLinks compact dark />
+          <a className="mobile-whatsapp" href={whatsappHref} target="_blank" rel="noreferrer">ابدأ على واتساب <span>↗</span></a>
+          <SocialLinks compact dark socials={socials} />
           <small className="mobile-menu-note">Themes · Plugins · Arabic WordPress</small>
         </div>
       </aside>

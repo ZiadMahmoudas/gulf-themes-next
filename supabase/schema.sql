@@ -94,6 +94,7 @@ create table if not exists public.site_settings (
   facebook text default 'https://www.facebook.com/ziadmohagerDev/',
   instagram text default 'https://www.instagram.com/ziadmohagerdev/',
   linkedin text default 'https://www.linkedin.com/in/ziad-mahmoud-mohammed/',
+  social_links jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
 

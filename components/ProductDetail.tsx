@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { whatsappUrl } from "@/lib/site";
+import { buildWhatsappUrl, getSiteSettings } from "@/lib/site-settings";
 
 type ProductDetailProps = {
   kind: "theme" | "plugin";
@@ -18,7 +18,7 @@ type ProductDetailProps = {
   gallery?: string[];
 };
 
-export function ProductDetail({
+export async function ProductDetail({
   kind,
   title,
   label,
@@ -39,7 +39,8 @@ export function ProductDetail({
   const typeLabel = kind === "theme" ? "WORDPRESS THEME" : "WORDPRESS PLUGIN";
   const productTypeAr = kind === "theme" ? "القالب" : "الإضافة";
   const images = [image, ...gallery.filter(Boolean)].filter((value, index, list) => list.indexOf(value) === index);
-  const inquiryUrl = whatsappUrl(`مرحباً، أريد ${productTypeAr} ${title}. ممكن أعرف التفاصيل وخطوات الحصول عليه؟`);
+  const settings = await getSiteSettings();
+  const inquiryUrl = buildWhatsappUrl(settings.socials.whatsapp || settings.phone, `مرحباً، أريد ${productTypeAr} ${title}. ممكن أعرف التفاصيل وخطوات الحصول عليه؟`);
 
   return (
     <article className="product-detail-v19 product-detail-v20">

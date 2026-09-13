@@ -1,0 +1,18 @@
+ArabDEV V28 — install/update
+
+1) In Supabase Dashboard > SQL Editor, run:
+   supabase/v28-update.sql
+
+2) Upload/deploy this V28 project over the current version.
+
+3) In /admin/settings you can now add:
+   Facebook, Instagram, LinkedIn, X/Twitter, TikTok, YouTube,
+   Telegram, WhatsApp and GitHub.
+
+4) Save Settings, then hard refresh the site once.
+
+Important:
+- The settings page now feeds the public site instead of using hard-coded social links.
+- Empty social fields are hidden automatically.
+- Header/mobile/footer/contact/product WhatsApp links use the saved WhatsApp value.
+- The hero headline and both black ticker bars were also fixed in this version.

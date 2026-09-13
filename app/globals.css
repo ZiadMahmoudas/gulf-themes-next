@@ -6683,3 +6683,125 @@ body {
   .post-body h3,
   .rich-content h3 { font-size: 19px; }
 }
+
+/* ========================================================================== 
+   ArabDEV V28 — live site settings + clean continuous ticker + hero fix
+   ========================================================================== */
+
+/* Settings: clearer grouping without turning the page into boxed cards. */
+.v28-settings-form { max-width: 920px; gap: 26px; }
+.v28-settings-section { display: grid; gap: 18px; padding-bottom: 26px; border-bottom: 1px solid rgba(24,22,18,.10); }
+.v28-settings-section:last-of-type { padding-bottom: 8px; border-bottom: 0; }
+.v28-settings-title { display:flex; align-items:flex-end; justify-content:space-between; gap:22px; padding-bottom:2px; }
+.v28-settings-title > div { display:flex; align-items:center; gap:10px; }
+.v28-settings-title small { width:28px; height:28px; border-radius:9px; display:grid; place-items:center; background:#171713; color:#fff; font:700 8px var(--font-latin); }
+.v28-settings-title h2 { margin:0; font-size:17px; line-height:1.4; }
+.v28-settings-title p { max-width:470px; margin:0; color:#7d7468; font-size:9px; line-height:1.8; }
+.v28-settings-form .admin-field input[dir="ltr"] { text-align:left; direction:ltr; }
+
+/* Header ticker: no giant distributed gaps; each item follows the previous one. */
+.v13-announcement { overflow:hidden; direction:ltr; }
+.v13-marquee-track {
+  width:max-content !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex:none !important;
+  animation:v28HeaderTicker 27s linear infinite !important;
+}
+.v13-marquee-group {
+  width:max-content !important;
+  min-width:0 !important;
+  flex:none !important;
+  justify-content:flex-start !important;
+  gap:0 !important;
+  padding-inline:0 !important;
+}
+.v13-marquee-group span {
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  gap:16px !important;
+  padding-inline:14px;
+  direction:ltr;
+  white-space:nowrap;
+}
+.v13-marquee-group i { flex:none; color:var(--v13-gold-2); }
+@keyframes v28HeaderTicker {
+  from { transform:translate3d(0,0,0); }
+  to { transform:translate3d(-50%,0,0); }
+}
+
+/* Home hero: explicit rows + safe Arabic line-height prevents collisions. */
+.v23-hero-copy .v28-hero-title {
+  display:block;
+  max-width:720px;
+  margin:18px 0 20px;
+  font-size:clamp(38px,4.05vw,58px);
+  line-height:1.3 !important;
+  font-weight:650;
+  text-wrap:initial;
+}
+.v28-title-row {
+  display:block !important;
+  width:100%;
+  line-height:1.3 !important;
+  white-space:normal !important;
+}
+.v23-hero-copy .v28-title-row.v23-gold {
+  margin-top:2px;
+  color:#ad7c31;
+  font-size:.94em;
+  white-space:normal !important;
+}
+
+/* Home black strip: same continuous marquee behavior, always one clean line. */
+.v23-trustbar { overflow:hidden; direction:ltr; }
+.v23-trustbar .v28-trust-track {
+  min-height:50px;
+  width:max-content;
+  display:flex;
+  align-items:center;
+  flex:none;
+  animation:v28TrustTicker 30s linear infinite;
+  will-change:transform;
+}
+.v28-trust-group {
+  width:max-content;
+  flex:none;
+  display:flex;
+  align-items:center;
+}
+.v28-trust-group span {
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  gap:18px;
+  padding-inline:17px;
+  white-space:nowrap;
+  font:700 8px/1 var(--font-latin),sans-serif;
+  letter-spacing:.08em;
+}
+.v28-trust-group i { color:#b78945; font-style:normal; }
+@keyframes v28TrustTicker {
+  from { transform:translate3d(-50%,0,0); }
+  to { transform:translate3d(0,0,0); }
+}
+.v23-trustbar:hover .v28-trust-track { animation-play-state:paused; }
+
+/* More networks can be shown without breaking footer/contact/mobile layouts. */
+.social-links { row-gap:9px; }
+.contact-social-card .social-links { max-width:100%; }
+
+@media (max-width:700px) {
+  .v28-settings-title { align-items:flex-start; flex-direction:column; gap:8px; }
+  .v28-settings-title p { max-width:none; }
+  .v23-hero-copy .v28-hero-title { font-size:34px !important; line-height:1.34 !important; }
+  .v28-title-row { line-height:1.34 !important; }
+  .v13-marquee-group span { gap:12px !important; padding-inline:11px; font-size:7px; }
+  .v28-trust-group span { gap:14px; padding-inline:12px; font-size:7px; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .v13-marquee-track,
+  .v28-trust-track { animation:none !important; }
+}

@@ -195,14 +195,28 @@ export async function updateMessage(fd: FormData) {
 
 export async function saveSettings(fd: FormData) {
   const { supabase } = await requireAdmin();
+  const socialLinks = {
+    facebook: val(fd, "facebook"),
+    instagram: val(fd, "instagram"),
+    linkedin: val(fd, "linkedin"),
+    x: val(fd, "x"),
+    tiktok: val(fd, "tiktok"),
+    youtube: val(fd, "youtube"),
+    telegram: val(fd, "telegram"),
+    whatsapp: val(fd, "whatsapp"),
+    github: val(fd, "github"),
+  };
+
   const payload = {
     brand_name: val(fd, "brand_name"),
     tagline: val(fd, "tagline"),
     phone: val(fd, "phone"),
     email: val(fd, "email"),
-    facebook: val(fd, "facebook"),
-    instagram: val(fd, "instagram"),
-    linkedin: val(fd, "linkedin"),
+    // Keep the original columns in sync for backwards compatibility.
+    facebook: socialLinks.facebook,
+    instagram: socialLinks.instagram,
+    linkedin: socialLinks.linkedin,
+    social_links: socialLinks,
   };
 
   const { error } = await supabase
@@ -214,7 +228,11 @@ export async function saveSettings(fd: FormData) {
     redirect(`/admin/settings?error=${encodeURIComponent(error.message)}`);
   }
 
+  updateTag("arabdev-settings");
   revalidatePath("/", "layout");
+  revalidatePath("/contact");
+  revalidatePath("/themes");
+  revalidatePath("/plugins");
   redirect("/admin/settings?saved=1");
 }
 
